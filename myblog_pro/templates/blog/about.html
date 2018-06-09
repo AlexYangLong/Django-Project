@@ -1,0 +1,40 @@
+{% extends 'blog/base.html' %}
+{% load staticfiles %}
+
+{% block main %}
+<div class="pagebg ab"> </div>
+<div class="container">
+  <h1 class="t_nav">
+      <span>像“草根”一样，紧贴着地面，低调的存在，冬去春来，枯荣无恙。</span>
+      <a href="{% url 'blog:about' %}" class="n2">关于我</a></h1>
+  <div class="news_infos">
+    <ul>
+      {{ user.brief }}
+    </ul>
+  </div>
+  <div class="sidebar">
+    <div class="about">
+      <p class="avatar"> <img src="/media/{{ user.icon }}" alt=""> </p>
+      <p class="abname">{{ user.username }}</p>
+      <p class="abtext"> {{ user.brief }} </p>
+    </div>
+{#    <div class="weixin">#}
+{#      <h2 class="hometitle">微信关注</h2>#}
+{#      <ul>#}
+{#        <img src="images/wx.jpg">#}
+{#      </ul>#}
+{#    </div>#}
+      <div class="guanzhu" id="follow-us">
+          <h2 class="hometitle">关注我 么么哒！</h2>
+          <ul>
+    {#        <li class="sina"><a href="/" target="_blank"><span>新浪微博</span>杨青博客</a></li>#}
+    {#        <li class="tencent"><a href="/" target="_blank"><span>腾讯微博</span>杨青博客</a></li>#}
+            <li class="qq"><a target="_blank"><span>QQ号</span>120664469</a></li>
+            <li class="email"><a target="_blank"><span>邮箱帐号</span>120664469@qq.com</a></li>
+            <li class="wxgzh"><a target="_blank"><span>微信号</span>yl952001</a></li>
+    {#        <li class="wx"><img src="images/wx.jpg"></li>#}
+          </ul>
+        </div>
+  </div>
+</div>
+{% endblock %}
