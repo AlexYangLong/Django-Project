@@ -25,6 +25,9 @@ from myblog_pro import settings
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('blog.urls', namespace='blog')),
+    url(r'^backend/', include('backend.urls', namespace='backend')),
+
+    # 配置static、media的路径，在生产环境使用
     url(r'^static/(?P<path>.*)$', serve, {"document_root": settings.STATICFILES_DIRS[0]}),
     url(r'^media/(?P<path>.*)$', serve, {"document_root": settings.MEDIA_ROOT}),
 ]
