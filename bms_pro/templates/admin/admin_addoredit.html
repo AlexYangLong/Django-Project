@@ -1,0 +1,186 @@
+{% extends 'base_addoredit.html' %}
+
+{% block title %}权限操作{% endblock %}
+
+{% block content %}
+<article class="cl pd-20">
+	<form class="form form-horizontal" id="form-admin-add">
+        {% csrf_token %}
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>登录名：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="登录名" id="username" name="username">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>姓名：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="密码" id="name" name="name">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>初始密码：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="password" class="input-text" autocomplete="off"  placeholder="初始密码" id="password" name="password">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>性别：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<div class="radio-box">
+					<input name="sex" type="radio" id="sex-1" value="1">
+					<label for="sex-1">男</label>
+				</div>
+				<div class="radio-box">
+					<input type="radio" id="sex-2" name="sex" value="0">
+					<label for="sex-2">女</label>
+				</div>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>手机：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="手机号" id="phone" name="phone">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>邮箱：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" placeholder="邮箱" name="email" id="email">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">角色：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<select class="input-text" id="role" size="1">
+
+				</select>
+            </div>
+		</div>
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input class="btn btn-primary radius" type="button" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			</div>
+		</div>
+        <div class="row cl">
+            <div class="formControls col-xs-8 col-xs-offset-3">
+                <div id="result"></div>
+            </div>
+        </div>
+	</form>
+</article>
+{% endblock %}
+
+{% block JS %}
+<!--请在下方写此页面业务相关的脚本-->
+{#<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script> #}
+{#<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script> #}
+{#<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script> #}
+<script type="text/javascript">
+function get_admin(adid) {
+    if(adid != '' && adid != undefined) {
+        $.ajaxSettings.async = false;
+        $.getJSON('/bms/get_admin_by_id/'+adid+'/', function (data) {
+            if(data.code == '200'){
+                $('#username').val(data.data.username);
+                $('#name').val(data.data.name);
+                $('#password').val('******');
+                if(data.data.gender == 1){
+                    $('#sex-1').attr('checked', true);
+                }else{
+                    $('#sex-2').attr('checked', true);
+                }
+                $('#phone').val(data.data.name);
+                $('#email').val(data.data.name);
+                $('#role').val(data.data.role.id);
+            }
+        });
+    }
+}
+function get_roles() {
+    $.ajaxSettings.async = false;
+    $.getJSON('/bms/get_roles/', function (data) {
+        if(data.code == '200'){
+            var datas = data.data_list;
+            var html = '<option value="">--请选择--</option>';
+            for(var i=0;i<datas.length;i++){
+                html += '<option value="'+datas[i].id+'">'+datas[i].name+'</option>';
+            }
+            $('#role').html(html);
+        }else {
+            layer.msg(data.msg, {icon: 2, time: 1500});
+        }
+    });
+}
+
+$(function(){
+    adid = window.location.search.split('=')[1];
+    get_roles();
+    get_admin(adid);
+
+    $('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+
+	$(".btn-primary").on('click', function(e){
+		e.preventDefault();
+
+		var username = $('#username').val().trim();
+		var name = $('#name').val().trim();
+		var password = $('#password').val().trim();
+		var gender = $('input[type="radio"]:checked').val();
+		var phone = $('#phone').val().trim();
+		var email = $('#email').val().trim();
+		var role = $('#role').val();
+        var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val();
+
+        if(username == ''){
+            $('#result').html('登录名不能为空！');
+            return;
+        }else if(name == ''){
+            $('#result').html('姓名不能为空！');
+            return;
+        }else if(password == ''){
+            $('#result').html('密码不能为空！');
+            return;
+        }else if(gender == ''){
+            $('#result').html('性别不能为空！');
+            return;
+        }else if(phone == ''){
+            $('#result').html('手机号不能为空！');
+            return;
+        }else if(email == ''){
+            $('#result').html('邮箱不能为空！');
+            return;
+        }else if(role == ''){
+            $('#result').html('角色不能为空！');
+            return;
+        }else {
+            $('#result').html('');
+        }
+
+        $.ajax({
+            url: "{% url 'bms:admin_addoredit' %}",
+            type: 'post',
+            data: {'admin_id':adid, 'username': username, 'name': name, 'password':password, 'phone': phone, 'email': email, 'role': role , 'gender': gender, 'csrfmiddlewaretoken': csrfmiddlewaretoken},
+            dataType: 'json',
+            success: function (data) {
+                if (data.code == '200'){
+                    layer.msg(data.msg, {icon: 1, time: 1000});
+                    window.parent.location.href = '{% url 'bms:admins' %}?pn=1&sk=';
+                }else {
+                    layer.msg(data.msg, {icon: 2, time: 1500});
+                }
+            },
+            error: function (error) {
+                console.log(error);
+                layer.msg('请求失败', {icon: 2, time: 1500});
+            }
+        });
+	});
+});
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends 'base_addoredit.html' %}
+
+{% block title %}权限操作{% endblock %}
+
+{% block content %}
+<article class="cl pd-20">
+	<form class="form form-horizontal">
+        {% csrf_token %}
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>权限名：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="权限名" id="auth_name" name="auth_name">
+			</div>
+		</div>
+        <div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">路由：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="路由" id="auth_url" name="auth_url">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">父级：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+                <select id="parent" class="input-text">
+                    <option value="">--请选择--</option>
+                </select>
+{#				<input type="text" class="input-text" autocomplete="off" value="" placeholder="密码" id="password" name="password">#}
+			</div>
+		</div>
+
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input class="btn btn-primary radius" type="button" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			</div>
+		</div>
+        <div class="row cl">
+            <div class="formControls col-xs-8 col-xs-offset-3">
+                <div id="result"></div>
+            </div>
+        </div>
+	</form>
+</article>
+{% endblock %}
+
+{% block JS %}
+<!--请在下方写此页面业务相关的脚本-->
+{#<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script> #}
+{#<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script> #}
+{#<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script> #}
+<script type="text/javascript">
+function get_auth(aid) {
+    if(aid != '' && aid != undefined) {
+        $.ajaxSettings.async = false;
+        $.getJSON('/bms/get_auth_by_id/'+aid+'/', function (data) {
+            if(data.code == '200'){
+                $('#auth_name').val(data.data.name);
+                $('#auth_url').val(data.data.url);
+                $('#parent').val(data.data.parent.id);
+            }
+        });
+    }
+}
+function get_auths() {
+    $.ajaxSettings.async = false;
+    $.getJSON('/bms/get_auths/', function (data) {
+        if(data.code == '200'){
+            var datas = data.data_list;
+            var html = '<option value="">--请选择--</option>';
+            for(var i=0;i<datas.length;i++){
+                html += '<option value="'+datas[i].id+'">'+datas[i].name+'</option>';
+            }
+            $('#parent').html(html);
+        }else {
+            layer.msg(data.msg, {icon: 2, time: 1500});
+        }
+    });
+}
+
+$(function(){
+    aid = window.location.search.split('=')[1];
+    get_auths();
+    get_auth(aid);
+
+	$(".btn-primary").on('click', function(e){
+		e.preventDefault();
+
+		var auth_name = $('#auth_name').val().trim();
+		var auth_url = $('#auth_url').val().trim();
+		var parent = $('#parent').val();
+        var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val();
+
+        if(auth_name == ''){
+            $('#result').html('权限名不能为空！');
+            return;
+        }else {
+            $('#result').html('');
+        }
+
+        $.ajax({
+            url: "{% url 'bms:auth_addoredit' %}",
+            type: 'post',
+            data: {'auth_id':aid, 'auth_name': auth_name, 'auth_url': auth_url, 'parent': parent, 'csrfmiddlewaretoken': csrfmiddlewaretoken},
+            dataType: 'json',
+            success: function (data) {
+                if (data.code == '200'){
+                    layer.msg(data.msg, {icon: 1, time: 1000});
+                    window.parent.location.href = '{% url 'bms:auths' %}?pn=1&sk=';
+                }else {
+                    layer.msg(data.msg, {icon: 2, time: 1500});
+                }
+            },
+            error: function (error) {
+                console.log(error);
+                layer.msg('请求失败', {icon: 2, time: 1500});
+            }
+        });
+	});
+});
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+{% endblock %}

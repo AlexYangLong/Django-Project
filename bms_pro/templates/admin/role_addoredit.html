@@ -1,0 +1,248 @@
+﻿{% extends 'base_addoredit.html' %}
+
+{% block title %}角色操作{% endblock %}
+
+{% block content %}
+<article class="cl pd-20">
+	<form class="form form-horizontal" id="form-admin-role-add">
+        {% csrf_token %}
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>角色名：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="请输入角色名" id="role_name" name="role_name" datatype="*4-16" nullmsg="用户账户不能为空">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">描述：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="请输入角色描述" id="description" name="description">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>拥有权限：</label>
+			<div class="formControls col-xs-8 col-sm-9" id="auth_list">
+{#				<dl class="permission-list">#}
+{#					<dt>#}
+{#						<label>#}
+{#							<input type="checkbox" value="" name="user-Character-0" id="user-Character-0">#}
+{#							资讯管理</label>#}
+{#					</dt>#}
+{#					<dd>#}
+{#						<dl class="cl permission-list2">#}
+{#							<dt>#}
+{#								<label class="">#}
+{#									<input type="checkbox" value="" name="user-Character-0-0" id="user-Character-0-0">#}
+{#									栏目管理</label>#}
+{#							</dt>#}
+{#							<dd>#}
+{#								<label class="">#}
+{#									<input type="checkbox" value="" name="user-Character-0-0-0" id="user-Character-0-0-0">#}
+{#									添加</label>#}
+{#								<label class="">#}
+{#									<input type="checkbox" value="" name="user-Character-0-0-0" id="user-Character-0-0-1">#}
+{#									修改</label>#}
+{#								<label class="">#}
+{#									<input type="checkbox" value="" name="user-Character-0-0-0" id="user-Character-0-0-2">#}
+{#									删除</label>#}
+{#								<label class="">#}
+{#									<input type="checkbox" value="" name="user-Character-0-0-0" id="user-Character-0-0-3">#}
+{#									查看</label>#}
+{#								<label class="">#}
+{#									<input type="checkbox" value="" name="user-Character-0-0-0" id="user-Character-0-0-4">#}
+{#									审核</label>#}
+{#								<label class="c-orange"><input type="checkbox" value="" name="user-Character-0-0-0" id="user-Character-0-0-5"> 只能操作自己发布的</label>#}
+{#							</dd>#}
+{#						</dl>#}
+{#						<dl class="cl permission-list2">#}
+{#							<dt>#}
+{#								<label class="">#}
+{#									<input type="checkbox" value="" name="user-Character-0-1" id="user-Character-0-1">#}
+{#									文章管理</label>#}
+{#							</dt>#}
+{#							<dd>#}
+{#								<label class="">#}
+{#									<input type="checkbox" value="" name="user-Character-0-1-0" id="user-Character-0-1-0">#}
+{#									添加</label>#}
+{#								<label class="">#}
+{#									<input type="checkbox" value="" name="user-Character-0-1-0" id="user-Character-0-1-1">#}
+{#									修改</label>#}
+{#								<label class="">#}
+{#									<input type="checkbox" value="" name="user-Character-0-1-0" id="user-Character-0-1-2">#}
+{#									删除</label>#}
+{#								<label class="">#}
+{#									<input type="checkbox" value="" name="user-Character-0-1-0" id="user-Character-0-1-3">#}
+{#									查看</label>#}
+{#								<label class="">#}
+{#									<input type="checkbox" value="" name="user-Character-0-1-0" id="user-Character-0-1-4">#}
+{#									审核</label>#}
+{#								<label class="c-orange"><input type="checkbox" value="" name="user-Character-0-2-0" id="user-Character-0-2-5"> 只能操作自己发布的</label>#}
+{#							</dd>#}
+{#						</dl>#}
+{#					</dd>#}
+{#				</dl>#}
+{#				<dl class="permission-list">#}
+{#					<dt>#}
+{#						<label>#}
+{#							<input type="checkbox" value="" name="user-Character-0" id="user-Character-1">#}
+{#							用户中心</label>#}
+{#					</dt>#}
+{#					<dd>#}
+{#						<dl class="cl permission-list2">#}
+{#							<dt>#}
+{#								<label class="">#}
+{#									<input type="checkbox" value="" name="user-Character-1-0" id="user-Character-1-0">#}
+{#									用户管理</label>#}
+{#							</dt>#}
+{#							<dd>#}
+{#								<label class="">#}
+{#									<input type="checkbox" value="" name="user-Character-1-0-0" id="user-Character-1-0-0">#}
+{#									添加</label>#}
+{#								<label class="">#}
+{#									<input type="checkbox" value="" name="user-Character-1-0-0" id="user-Character-1-0-1">#}
+{#									修改</label>#}
+{#								<label class="">#}
+{#									<input type="checkbox" value="" name="user-Character-1-0-0" id="user-Character-1-0-2">#}
+{#									删除</label>#}
+{#								<label class="">#}
+{#									<input type="checkbox" value="" name="user-Character-1-0-0" id="user-Character-1-0-3">#}
+{#									查看</label>#}
+{#								<label class="">#}
+{#									<input type="checkbox" value="" name="user-Character-1-0-0" id="user-Character-1-0-4">#}
+{#									审核</label>#}
+{#							</dd>#}
+{#						</dl>#}
+{#					</dd>#}
+{#				</dl>#}
+			</div>
+		</div>
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<button type="button" class="btn btn-success radius" id="role-save" name="admin-role-save"><i class="icon-ok"></i> 确定</button>
+			</div>
+		</div>
+        <div class="row cl">
+            <div class="formControls col-xs-8 col-xs-offset-3">
+                <div id="result"></div>
+            </div>
+        </div>
+	</form>
+</article>
+{% endblock %}
+
+{% block JS %}
+<!--请在下方写此页面业务相关的脚本-->
+{#<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script> #}
+{#<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script> #}
+{#<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script> #}
+<script type="text/javascript">
+function get_all_auth() {
+    $.ajaxSettings.async = false;
+    $.getJSON('/bms/get_auths_by_fj/', function (data) {
+        if(data.code == '200'){
+            var html = '';
+            for(var i=0;i<data.data_list.length;i++){
+                var role = data.data_list[i];
+                html += '<dl class="permission-list">';
+                html += '<dt><label><input type="checkbox" value="'+ role.id +'" >'+ role.name +'</label></dt>'; //name="user-Character-0" id="user-Character-1"
+                html += '<dd><dl class="cl permission-list2">';
+                for(var j=0;j<role.sub_auths.length;j++){
+                    html += '<dt><label class=""><input type="checkbox" value="'+role.sub_auths[j].id+'">'+role.sub_auths[j].name+'</label></dt>';
+                }
+                html +='</dl></dd></dl>';
+            }
+            $('#auth_list').append(html);
+
+            $(".permission-list dt input:checkbox").click(function(){
+                $(this).closest("dl").find("dd input:checkbox").prop("checked",$(this).prop("checked"));
+            });
+            $(".permission-list2 dt input:checkbox").click(function(){
+                var l2=$(this).parents(".permission-list").find(".permission-list2 dt").find("input:checked").length;
+                if($(this).prop("checked")){
+                    $(this).parents(".permission-list").find("dt").first().find("input:checkbox").prop("checked",true);
+                }
+                else{
+                    if(l2==0){
+                        $(this).parents(".permission-list").find("dt").first().find("input:checkbox").prop("checked",false);
+                    }
+                }
+            });
+        }
+    });
+}
+
+function get_role_auth(rid) {
+    if(rid != '' && rid != undefined) {
+        $.ajaxSettings.async = false;
+        $.getJSON('/bms/get_role_by_id/'+rid+'/', function (data) {
+            if(data.code == '200'){
+
+                $('#role_name').val(data.data.name);
+                $('#description').val(data.data.description);
+
+                var ck_objs = $('.permission-list dt input:checkbox');
+                {#alert(data.data.auths)#}
+                for(var i=0;i<ck_objs.length;i++){
+                    if(data.data.auths.indexOf(ck_objs[i].value) != -1){
+                        $(ck_objs[i]).prop("checked", true);
+                    }
+                }
+            }
+        });
+    }
+}
+
+$(function(){
+    rid = window.location.search.split('=')[1];
+    get_all_auth();
+    get_role_auth(rid);
+	
+	$("#role-save").on('click', function(e){
+		e.preventDefault();
+
+        var name = $('#role_name').val().trim();
+        var description = $('#description').val().trim();
+        var ck_objs = $('.permission-list dt input:checkbox');
+        var aids = '';
+        for(var i=0;i<ck_objs.length;i++){
+            if(ck_objs[i].checked){
+                aids += ck_objs[i].value + ',';
+            }
+        }
+        {#alert(aids)#}
+        if(name == ''){
+            $('#result').html('角色名不能为空');
+            return;
+        } else if(aids == ''){
+            $('#result').html('角色的权限不能为空');
+            return;
+        } else {
+            $('#result').html('');
+        }
+        var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val();
+        $.ajax({
+            url: '/bms/role_addoredit/',
+            type: 'post',
+            data: {'role_id': rid, 'role_name': name, 'description': description, 'aids': aids, 'csrfmiddlewaretoken': csrfmiddlewaretoken},
+            datatype: 'json',
+            success: function (data) {
+                if(data.code == '200'){
+                    {#layer.alert(data.msg);#}
+                    {#$('#result').html(data.msg);#}
+                    layer.msg(data.msg, {icon: 1, time: 1000});
+                    window.parent.location.href = '{% url 'bms:roles' %}?pn=1';
+                }else {
+                    {#layer.alert('操作失败！' + data.msg);#}
+                    {#$('#result').html(data.msg);#}
+                    layer.msg(data.msg, {icon: 2, time: 1500});
+                }
+            },
+            error: function (error) {
+                layer.msg('请求失败!',{icon: 2, time: 1500});
+                console.log(error);
+            }
+        });
+	});
+});
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+{% endblock %}

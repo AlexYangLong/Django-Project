@@ -1,0 +1,126 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}主页{% endblock %}
+
+{% block content %}
+<section class="Hui-article-box">
+	<nav class="breadcrumb">
+        <i class="Hui-iconfont">&#xe67f;</i> <a href="{% url 'bms:index' %}" class="maincolor">首页</a> <span class="c-gray en">&gt;</span> 管理员管理 <span class="c-gray en">&gt;</span> 角色管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+	<div class="Hui-article">
+		<article class="cl pd-20">
+			<div class="cl pd-5 bg-1 bk-gray"> <span class="l"> <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a class="btn btn-primary radius" href="javascript:;" onclick="role_add('添加角色','{% url 'bms:role_addoredit' %}','800', '400')"><i class="Hui-iconfont">&#xe600;</i> 添加角色</a> </span> <span class="r">共有数据：<strong></strong> 条</span> </div>
+{#			<div class="mt-10">#}
+			<table class="table table-border table-bordered table-hover table-bg">
+                {% csrf_token %}
+				<thead>
+					<tr>
+						<th scope="col" colspan="6">角色管理</th>
+					</tr>
+					<tr class="text-c">
+						<th width="25"><input type="checkbox" value="" name=""></th>
+						<th width="40">序号</th>
+						<th width="200">角色名</th>
+						<th>用户列表</th>
+						<th width="300">描述</th>
+						<th width="70">操作</th>
+					</tr>
+				</thead>
+				<tbody id="data_list">
+{#					<tr class="text-c">#}
+{#						<td><input type="checkbox" value="" name=""></td>#}
+{#						<td>1</td>#}
+{#						<td>超级管理员</td>#}
+{#						<td><a href="#">admin</a></td>#}
+{#						<td>拥有至高无上的权利</td>#}
+{#						<td class="f-14">#}
+{#                            <a title="编辑" href="javascript:;" onclick="admin_role_edit('角色编辑','admin-role-add.html','1')" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>#}
+{#                            <a title="删除" href="javascript:;" onclick="admin_role_del(this,'1')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>#}
+{#                        </td>#}
+{#					</tr>#}
+				</tbody>
+			</table>
+            <div id="page" style="float: right; margin-top: 10px;"></div>
+{#			</div>#}
+		</article>
+	</div>
+</section>
+{% endblock %}
+
+{% block JS %}
+<!--请在下方写此页面业务相关的脚本-->
+{#<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>#}
+{#<script type="text/javascript" src="lib/datatables/1.10.0/jquery.dataTables.min.js"></script>#}
+<script type="text/javascript" src="/static/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+
+$(function () {
+    var search = window.location.search;
+    pn = search.split('=')[1];
+    $.getJSON('/bms/get_role_list/?pn=' + pn, function (data) {
+        if(data.code == '200'){
+            var datas = data.data_list;
+            var html = '';
+            for(var i=0;i<datas.length;i++){
+                html += '<tr class="text-c">';
+                html += '<td><input type="checkbox" value="'+datas[i].id+'" name=""></td>';
+                html += '<td>'+((data.pn - 1) * data.ps +(i+1))+'</td>';
+                html += '<td>'+datas[i].name+'</td>';
+                html += '<td>'+datas[i].admins+'</td>';
+                html += '<td>'+datas[i].description+'</td>';
+                html += '<td class="f-14"><a title="编辑" href="javascript:;" onclick="role_edit(\'角色编辑\',\'{% url 'bms:role_addoredit' %}?rid='+datas[i].id+'\',\'1\',\'800\', \'400\')" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>';
+                html += '<a title="删除" href="javascript:;" onclick="role_del(this,\''+datas[i].id+'\')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td></tr>';
+            }
+            $('#data_list').append(html);
+            $('.r strong').html(data.data_count);
+
+            laypage({
+                cont: 'page', //容器。值支持id名、原生dom对象，jquery对象。【如该容器为】：<div id="page1"></div>
+                pages: data.page_count, //通过后台拿到的总页数
+                curr: data.pn || 1, //当前页
+                jump: function(obj, first){ //触发分页后的回调
+                    if(!first){ //点击跳页触发函数自身，并传递当前页：obj.curr
+                        window.parent.location.href = '{% url 'bms:roles' %}?pn=' + obj.curr;
+                    }
+                }
+            });
+        }else {
+            layer.msg(data.msg, {icon: 2, time: 1500});
+        }
+    });
+});
+
+/*管理员-角色-添加*/
+function role_add(title,url,w,h){
+	layer_show(title,url,w,h);
+}
+/*管理员-角色-编辑*/
+function role_edit(title,url,id,w,h){
+	layer_show(title,url,w,h);
+}
+/*管理员-角色-删除*/
+function role_del(obj,id){
+	layer.confirm('角色删除须谨慎，确认要删除吗？',function(index){
+		var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val();
+	    $.ajax({
+            url: "{% url 'bms:role_del' %}",
+            type: 'post',
+            data: {'rid':id, 'csrfmiddlewaretoken': csrfmiddlewaretoken},
+            dataType: 'json',
+            success: function (data) {
+                if (data.code == '200'){
+		            layer.msg('删除成功!',{icon:1,time:1000});
+		            window.parent.location.href = '{% url 'bms:roles' %}?pn='+pn;
+                }else {
+                    layer.msg(data.msg, {icon: 2, time: 1500});
+                }
+            },
+            error: function (error) {
+                console.log(error);
+                layer.msg('请求失败', {icon: 2, time: 1500});
+            }
+        });
+	});
+}
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+{% endblock %}
