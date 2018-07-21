@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <title>宠物新鲜事_关于宠物那些搞笑的趣闻_让你捧腹不不止的宠物新鲜事_宠物秀</title>
+    <meta name="keywords" content="宠物,哈士奇,拉布拉多,金毛,布偶猫" />
+    <meta name="description" content="关于宠物的新鲜事有很多，有搞笑的趣闻，也有让你笑料不停的动态图，猫猫狗狗的趣事乐不停！" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" href="/static/footdon.png">
+    <link rel="stylesheet" href="/static/css/amazeui.min.css">
+    <link rel="stylesheet" href="/static/css/petshow.css">
+    <link rel="stylesheet" href="/static/css/animate.min.css">
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/amazeui.min.js"></script>
+    <base target="_blank" />
+</head>
+<body>
+<header class="am-topbar am-topbar-inverse">
+    <div class="amz-container">
+        <h1 class="am-topbar-brand">
+            <a href="http://www.petshow.cc" class="am-topbar-logo">
+                <img src="/static/logo.png" alt="宠物秀">
+            </a>
+        </h1>
+        <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only"
+                data-am-collapse="{target: '#doc-topbar-collapse-5'}">
+            <span class="am-sr-only">
+                导航切换
+            </span>
+            <span class="am-icon-bars">
+            </span>
+        </button>
+     <script>
+
+     </script>
+
+        <div class="am-collapse am-topbar-collapse" id="doc-topbar-collapse-5">
+            <ul class="am-nav am-nav-pills am-topbar-nav pet_filter">
+                <li class="am-active">
+                    <a href="http://www.petshow.cc" title="宠物秀" target="_self">
+                        首页
+                    </a>
+                </li>
+                <li class="am-dropdown" data-am-dropdown="">
+                    <a class="am-dropdown-toggle" data-am-dropdown-toggle="" href="javascript:;" target="_self">
+                        发现萌宠
+                        <span class="am-icon-caret-down">
+                        </span>
+                    </a>
+                    <ul class="am-dropdown-content">
+                        <li>
+                            <a href="http://www.petshow.cc" title="编辑推荐" target="_self">
+                                编辑推荐
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://www.petshow.cc/hot.html" title="人气排行" target="_self">
+                                人气排行
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://www.petshow.cc/new.html" title="最新发布" target="_self">
+                                最新发布
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://www.petshow.cc/voice.html" title="语音涂鸦" target="_self">语音涂鸦</a>
+                        </li>
+                        <li>
+                            <a href="http://www.petshow.cc/t/72.html" title="哈士奇" target="_self">哈士奇</a>
+                        </li>
+                        <li>
+                            <a href="http://www.petshow.cc/t/77.html" title="柯基" target="_self">柯基</a>
+                        </li>
+                        <li>
+                            <a href="http://www.petshow.cc/t/8.html" title="博美俊介" target="_self">博美俊介</a>
+                        </li>
+                        <li>
+                            <a href="http://www.petshow.cc/t/16.html" title="秋田犬" target="_self">秋田犬</a>
+                        </li>
+                        <li>
+                            <a href="http://www.petshow.cc/t/38.html" title="龙猫" target="_self">龙猫</a>
+                        </li>
+                        <li>
+                            <a href="http://www.petshow.cc/t/82.html" title="语拉布拉多" target="_self">拉布拉多</a>
+                        </li>
+                        <li>
+                            <a href="http://www.petshow.cc/t/66.html" title="语金毛" target="_self">金毛</a>
+                        </li><li>
+                            <a href="http://www.petshow.cc/t/84.html" title="语音涂鸦" target="_self">布偶猫</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="{% url 'show:fresh' '1' %}" title="新鲜事" target="_blank">
+                        新鲜事
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'show:fresh' '3' %}" title="涨知识" target="_blank">涨知识</a>
+                </li>
+                <li>
+                    <a href="{% url 'show:topic' '0' %}" title="萌专题" target="_blank">
+                        萌专题
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'show:baike' '0' %}" title="宠物百科" target="_blank">
+                        宠物百科
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'show:question' '0' %}" title="宠物问答" target="_blank ">
+                        宠物问答
+                    </a>
+                </li>
+                <li>
+                    <a href="http://www.petshow.cc/s.html" title="宠物服务" target="_blank" >
+                        宠物服务
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</header>
+{% csrf_token %}
+<div class="am-tabs am-tabs-d2 am_news_tab">
+      <div id="wrapper" class="wrapper_nav">
+  <ul class="am-tabs-nav am-cf am_cf">
+    <li class="click_qb">
+      <a href="{% url 'show:fresh' '1' %}" title="新鲜事" target="_self">全部新鲜事</a>
+    </li>
+    <li class="click_xxs">
+      <a href="{% url 'show:fresh' '2' %}" title="宠物趣闻" target="_self">宠物趣闻</a>
+    </li>
+    <li class="click_zzs">
+      <a href="{% url 'show:fresh' '5' %}" title="宠物发现" target="_self">宠物发现</a>
+    </li>
+        <li class="click_mr">
+      <a href="{% url 'show:fresh' '6' %}" title="宠物动图" target="_self">宠物动图</a>
+    </li>
+    <li class="click_xl">
+      <a href="{% url 'show:fresh' '7' %}" title="宠物轶事" target="_self">宠物轶事</a>
+    </li>
+        <li class="click_fz">
+      <a href="{% url 'show:fresh' '8' %}" title="宠物资讯" target="_self">宠物资讯</a>
+    </li>
+        <li class="click_zl">
+      <a href="{% url 'show:fresh' '9' %}" title="宠物事件" target="_self">宠物事件</a>
+    </li>
+
+  </ul>
+</div>
+    <div class="am-list-news-bd am_news_list_all">
+    <ul class="am-list">
+
+    </ul>
+    <div class="am_news_load am_news_load_index"><span><i  class="am-icon-spinner am-icon-spin"></i>查看更多新鲜事</span></div>
+  </div>
+</div>
+<footer class="am_footer">
+    <div class="am_footer_con">
+        <div class="am_footer_link">
+            <span><a href="/about.html" title="关于宠物秀">关于宠物秀</a></span>
+            <ul>
+                <li><a rel="external nofollow" href="http://android.myapp.com/myapp/detail.htm?apkName=com.lbt.staffy.walkthedog" title="遛狗圈" rel="nofollow">遛狗圈</a></li>
+            </ul>
+        </div>
+
+
+        <div class="am_footer_don">
+            <span>宠物秀</span>
+            <dl>
+                <dt><img src="/static/footdon.png" alt=""></dt>
+                <dd>搞笑超激萌的宠物秀平台，不管是哈士奇 拉布拉多 萨摩耶 金毛 布偶猫 加菲猫 巴哥还是小宠物都来发布吧！原创宠物猫狗萌宠自拍移动社区！
+                   <a rel="external nofollow" href="https://itunes.apple.com/us/app/chong-wu-xiu/id976605844?l=zh&ls=1&mt=8" rel="nofollow" title="宠物App store版" class="footdon_pg ">
+                        <div class="foot_d_pg am-icon-apple ">App store</div>
+                    </a><a rel="external nofollow" href="http://android.myapp.com/myapp/detail.htm?apkName=com.staffy.pet" rel="nofollow" title="宠物秀安卓版"   class="footdon_az animated">
+                        <div class="foot_d_az am-icon-android "> Android</div>
+                    </a></dd>
+</dl>
+        </div>
+
+        <div class="am_footer_erweima">
+            <div class="am_footer_weixin"><img src="http://assets.petshow.cc/pc/v2/img/wx.jpg" alt="">
+
+                <div class="am_footer_d_gzwx am-icon-weixin"> 关注微信</div>
+            </div>
+            <div class="am_footer_ddon"><img src="http://assets.petshow.cc/pc/v2/img/dndn.png" alt="">
+
+                <div class="am_footer_d_dxz am-icon-cloud-download"> 扫码下载</div>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="am_info_line">Copyright(c)2015 <span>PetShow</span> All Rights Reserved</div>
+    <img src="http://c.cnzz.com/wapstat.php?siteid=1255832147&r=&rnd=557130984" width="0" height="0"/>    <script src="/static/js/petshow.js"></script>
+</footer>
+<script>
+// 分页
+{#var filter = 'articlelist';#}
+{#if(filter){#}
+{#  if(filter = 'articlelist'){#}
+{#      $('.pet_filter > li').eq(2).addClass('am-active').siblings().removeClass();#}
+{#  }#}
+{# }#}
+var url = window.location.href;
+var page = 1;
+var tag_id = url.split('/')[url.split('/').length-2];
+{#var datalist = 'articlelist';#}
+{#var pagesize = '20';#}
+if(tag_id == 1){
+  $('.click_qb').addClass('am-active').siblings().removeClass('am-active');
+ }else if(tag_id == 2){
+  $('.click_xxs').addClass('am-active').siblings().removeClass('am-active');
+ }else if(tag_id == 5){
+  $('.click_zzs').addClass('am-active').siblings().removeClass('am-active');
+ }else if(tag_id == 6){
+  $('.click_mr').addClass('am-active').siblings().removeClass('am-active');
+ }else if(tag_id == 7){
+  $('.click_xl').addClass('am-active').siblings().removeClass('am-active');
+ }else if(tag_id == 8){
+  $('.click_fz').addClass('am-active').siblings().removeClass('am-active');
+ }else if(tag_id == 9){
+  $('.click_zl').addClass('am-active').siblings().removeClass('am-active');
+ }
+$(function(){
+    load_more();
+});
+
+
+function load_more()
+{
+    var articlelistListHtml = '';
+    $('.am_news_load_index').unbind('click');
+    $.post('/show/fresh/'+tag_id+'/',{'csrfmiddlewaretoken': $('[name="csrfmiddlewaretoken"]').val()},function(data){
+        $('.am-icon-spinner').hide();
+        // 数据异常
+        if(data.code != 200)
+        {
+            console.log(data.msg);
+            return false;
+        }
+        var list = data.data_list;
+        for( var i = 0 ; i < list.length ; i++ ){
+            if(list[i].cover){
+                articlelistListHtml += '<li class="am-g am-list-item-desced am-list-item-thumbed am-list-item-thumb-left am_list_li"><div class="am-u-sm-3 am-list-thumb am_list_thumb"><a href="/show/fresh/'+tag_id+'/'+list[i].id+'.html" title="'+list[i].title+'" class=""><img src="'+list[i].cover+'" alt="'+list[i].title+'" class="am_news_list_img"/></a></div><div class=" am-u-sm-9 am-list-main am_list_main"><h3 class="am-list-item-hd am_list_title"><a href="/show/fresh/'+tag_id+'/'+list[i].id+'.html" title="'+list[i].title+'" class="">'+list[i].title+'</a></h3><div class="am_list_author"><a href="javascript:void(0)"><span class="am_list_author_ico"><img src="'+list[i].user.avatar+'" alt="" /></span><span class="name">'+list[i].user.username+'</span></a><span class="am_news_time">&nbsp;•&nbsp;<time class="timeago" title="2015-08-13 08:02:40 +0800" datetime="2015-08-13 08:02:40 +0800">'+list[i].create_time+'</time></span></div><div class="am-list-item-text am_list_item_text ">'+list[i].content+'</div></div></li>';
+            }else{
+                articlelistListHtml += '<li class="am-g am-list-item-desced am_list_li"><div class=" am-list-main"><h3 class="am-list-item-hd am_list_title am_list_title_s"><a href="/show/fresh/'+tag_id+'/'+list[i].id+'.html" title="'+list[i].title+'" class="">'+list[i].title+'</a></h3><div class="am_list_author"><a href="javascript:void(0)"><span class="am_list_author_ico"><img src="'+list[i].user.avatar+'" alt="'+list[i].user.username+'" /></span><span class="name">'+list[i].user.username+'</span></a><span class="am_news_time">&nbsp;•&nbsp;<time class="timeago" title="2015-08-13 08:02:40 +0800" datetime="2015-08-13 08:02:40 +0800">'+list[i].create_time+'</time></span></div><div class="am-list-item-text am_list_item_text">'+list[i].content+'</div></div></li>';
+            }
+         }
+        $('.am-list').append(articlelistListHtml);
+        // 懒加载
+         // 点击加载更多
+        $('.am_news_load_index').on('click',function(){
+            $('.am-icon-spinner').show();
+            if(data.page_now < data.page_count){
+                load_more(page);
+            }else {
+                $('.am_news_load_index').unbind('click');
+                $('.am-icon-spinner').hide();
+                $('.am_news_load_index span').text('已经到底啦~~');
+            }
+        });
+        page++;
+    },'json');
+
+}
+var IScroll = $.AMUI.iScroll;
+var myScroll = new IScroll('#wrapper', { eventPassthrough: true, click: true,scrollX: true, scrollY: false, preventDefault: false });
+wrapperNav();
+$(window).resize(function(){
+wrapperNav();
+});
+function wrapperNav(){
+if($(window).width() < 850 ){
+$('.wrapper_nav').attr('id','wrapper');
+}else{
+  $('.wrapper_nav').attr('id','');
+}}
+</script>
+</body>
+</html>
