@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% block title %}宠物百科_专业全面的宠物品种介绍，包括哈士奇拉布拉多布偶猫等宠物百科{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+<div class="am-tabs am-tabs-d2 am_news_tab">
+    <div id="wrapper" class="wrapper_nav">
+        <ul class="am-tabs-nav am-cf am_cf">
+          <li class="click_qb">
+      <a href="{% url 'show:knowledge' '3' %}?t=knowledge" title="涨知识" target="_self">全部涨知识</a>
+    </li>
+    <li class="click_xxs">
+      <a href="{% url 'show:knowledge' '4' %}?t=knowledge" title="养狗知识" target="_self">狗狗</a>
+    </li>
+    <li class="click_zzs">
+      <a href="{% url 'show:knowledge' '10' %}?t=knowledge" title="养猫知识" target="_self">猫咪</a>
+    </li>
+        <li class="click_mr">
+      <a href="{% url 'show:knowledge' '11' %}?t=knowledge" title="小宠知识" target="_self">小宠</a>
+    </li>
+    <li class="click_xl">
+      <a href="{% url 'show:knowledge' '12' %}?t=knowledge" title="水族知识" target="_self">水族</a>
+    </li>
+        <li class="click_fz">
+      <a href="{% url 'show:knowledge' '13' %}?t=knowledge" title="养鸟知识" target="_self">花鸟</a>
+    </li>
+        <li class="click_zl">
+      <a href="{% url 'show:knowledge' '14' %}?t=knowledge" title="爬虫知识" target="_self">爬虫</a>
+    </li>
+        <li class="click_jk">
+      <a href="{% url 'show:baike' %}" title="宠物百科" target="_self">百科</a>
+    </li>
+        <li class="click_wy">
+      <a href="{% url 'show:question' %}" title="宠物问答" target="_self">问答</a>
+    </li>
+        </ul>
+  </div>
+    <div class="pet_wiki_list">
+        <div href="#" class="pet_wiki_list_block">
+        </div>
+
+
+    </div>
+
+
+</div>
+{% endblock %}
+
+{% block JS %}
+<script>
+// 分页
+$('.pet_filter > li').eq(3).addClass('am-active').siblings().removeClass();
+$('.click_jk').addClass('am-active').siblings().removeClass('am-active');
+
+var page = 1;
+{#var tag_id = 0;#}
+$(function(){
+    form_data();
+        $('.pet_article_user').on('click',function(){
+            if($('.pet_article_user_info_tab').hasClass('pet_article_user_info_tab_show')){
+                $('.pet_article_user_info_tab').removeClass('pet_article_user_info_tab_show').addClass('pet_article_user_info_tab_cloes');
+            }else{
+                $('.pet_article_user_info_tab').removeClass('pet_article_user_info_tab_cloes').addClass('pet_article_user_info_tab_show');
+            }
+        });
+
+        $('.pet_head_gd_ico').on('click',function(){
+            $('.pet_more_list').addClass('pet_more_list_show');
+       });
+        $('.pet_more_close').on('click',function(){
+            $('.pet_more_list').removeClass('pet_more_list_show');
+        });
+
+// 下拉加载
+function pull_load()
+{
+    if ($(document).scrollTop() + $(window).height() > $(document).height() - 10)
+    {
+        // 卸载绑定 防止重复加载
+        $(window).unbind();
+        // 页数 +1
+        page ++ ;
+        form_data();
+    }
+}
+
+// 请求数据
+function form_data(){
+        // 请求数据
+        $.post('/show/baike/?pn=' + page, {'csrfmiddlewaretoken': $('[name="csrfmiddlewaretoken"]').val()}, function(data){
+            // 追加数据
+            // 数据异常
+            if(data.code != 200)
+            {
+                console.log(data.msg);
+                return false;
+            }
+            var list = data.data_list;
+            var pet_wiki_list_block = '';
+            for(var i=0;i<list.length;i++){
+              if(!list[i].reference_price){
+                list[i].reference_price = '暂无';
+              }
+              if(!list[i].shapes){
+                list[i].shapes = '暂无';
+              }
+              if(list[i].cover == ''){
+                list[i].cover = '/static/ggg.png';
+              }
+              pet_wiki_list_block += '<a href="/show/baike/'+list[i].id+'.html" class="pet_wiki_list_block_line"><span class="iconfont pet_wiki_list_block_line_more am-icon-angle-left"></span><div style="background:url('+list[i].cover+') center no-repeat; border-radius: 50%;-webkit-background-size: 140%;background-size: 140%;" class="pet_wiki_list_block_line_l"></div><div class="pet_wiki_list_block_line_r"><div class="pet_wiki_list_block_line_r_name">'+list[i].name+'</div><div class="pet_wiki_list_block_line_r_english">'+list[i].name_en+'</div><div class="pet_wiki_list_block_line_r_tag"><span><i  class="am-icon-rmb"></i>'+list[i].reference_price+'</span><span><i  class="am-icon-circle-o"></i>'+list[i].shapes+'</span></div></div></a>';
+            }
+            $('.pet_wiki_list_block').append(pet_wiki_list_block);
+            // 是否有下一页
+            if (data.has_next)
+                $(window).bind('scroll', pull_load);
+            }, 'json');
+}
+});
+var IScroll = $.AMUI.iScroll;
+var myScroll = new IScroll('#wrapper', { eventPassthrough: true, click: true,scrollX: true, scrollY: false, preventDefault: false });
+wrapperNav();
+$(window).resize(function(){
+wrapperNav();
+});
+function wrapperNav(){
+if($(window).width() < 850 ){
+$('.wrapper_nav').attr('id','wrapper');
+}else{
+  $('.wrapper_nav').attr('id','');
+}}
+</script>
+{% endblock %}

@@ -53,7 +53,7 @@ class Admin(models.Model):
         return {
             'id': self.id,
             'username': self.username,
-            'avatar': self.avatar,
+            'avatar': self.avatar if self.avatar else '',
             'create_time': self.create_time
         }
 
@@ -76,7 +76,7 @@ class User(models.Model):
         return {
             'id': self.id,
             'username': self.username,
-            'avatar': self.avatar,
+            'avatar': self.avatar if self.avatar else '',
             'create_time': self.create_time
         }
 
@@ -117,6 +117,13 @@ class Type(models.Model):
     class Meta:
         db_table = 'type'
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'create_time': self.create_time
+        }
+
 
 class Article(models.Model):
     """文章"""
@@ -139,7 +146,7 @@ class Article(models.Model):
             'title': self.title,
             'cover': self.cover if self.cover else '',
             'content': self.content,
-            'type': self.t.name,
+            'type': self.t.to_dict(),
             'user': self.user.to_simple_dict(),
             'create_time': self.create_time
         }
@@ -151,7 +158,7 @@ class Baike(models.Model):
     name = models.CharField(max_length=40, null=False)
     name_en = models.CharField(max_length=64, null=False)
     other_name = models.CharField(max_length=64, null=False)
-    cover = models.CharField(max_length=200, null=False)
+    cover = models.CharField(max_length=200, null=True)
     shapes = models.CharField(max_length=16, null=False)
     ages = models.CharField(max_length=16, null=False)
     fci_group = models.CharField(max_length=40, null=False)
@@ -180,7 +187,7 @@ class Baike(models.Model):
             'name':self.name,
             'name_en': self.name_en,
             'other_name': self.other_name,
-            'cover': self.cover,
+            'cover': self.cover if self.cover else '',
             'shapes': self.shapes,
             'ages': self.ages,
             'fci_group': self.fci_group,
@@ -248,9 +255,12 @@ class Answer(models.Model):
 class Topic(models.Model):
     """专题"""
     title = models.CharField(max_length=64, null=False)
+    cover = models.CharField(max_length=200, null=True)
     content = models.TextField(null=False)
 
     user = models.ForeignKey(User, null=False)
+
+    views = models.IntegerField(default=0)
 
     create_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
@@ -262,9 +272,26 @@ class Topic(models.Model):
         return {
             'id': self.id,
             'title': self.title,
+            'cover': self.cover if self.cover else '',
+            'content': self.content,
+            'user': self.user.to_simple_dict(),
+            'views': self.views,
+            'upvote': self.upvotetopic_set.all().count(),
+            'upvote_users': [user.to_simple_dict() for user in self.upvotetopic_set.all()],
+            'create_time': self.create_time
+        }
+
+    def to_full_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'cover': self.cover if self.cover else '',
             'content': self.content,
             'pics': [tp.to_dict() for tp in self.topicpic_set.all()],
             'user': self.user.to_simple_dict(),
+            'views': self.views,
+            'upvote': self.upvotetopic_set.all().count(),
+            'upvote_users': [user.to_simple_dict() for user in self.upvotetopic_set.all()],
             'create_time': self.create_time
         }
 
@@ -288,3 +315,14 @@ class TopicPic(models.Model):
             'tid': self.topic.id,
             'create_time': self.create_time
         }
+
+
+class UpvoteTopic(models.Model):
+    user = models.ForeignKey(User)
+    topic = models.ForeignKey(Topic)
+
+    create_time = models.DateTimeField(auto_now_add=True)
+    update_time = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'upvote_topic'

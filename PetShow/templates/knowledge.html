@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block title %}涨知识_我们提供最有趣丰富的宠物文章让_您更了解您的宠物_宠物秀{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+<div class="am-tabs am-tabs-d2 am_news_tab">
+      <div id="wrapper" class="wrapper_nav">
+  <ul class="am-tabs-nav am-cf am_cf">
+    <li class="click_qb">
+      <a href="{% url 'show:knowledge' '3' %}?t=knowledge" title="涨知识" target="_self">全部涨知识</a>
+    </li>
+    <li class="click_xxs">
+      <a href="{% url 'show:knowledge' '4' %}?t=knowledge" title="养狗知识" target="_self">狗狗</a>
+    </li>
+    <li class="click_zzs">
+      <a href="{% url 'show:knowledge' '10' %}?t=knowledge" title="养猫知识" target="_self">猫咪</a>
+    </li>
+        <li class="click_mr">
+      <a href="{% url 'show:knowledge' '11' %}?t=knowledge" title="小宠知识" target="_self">小宠</a>
+    </li>
+    <li class="click_xl">
+      <a href="{% url 'show:knowledge' '12' %}?t=knowledge" title="水族知识" target="_self">水族</a>
+    </li>
+        <li class="click_fz">
+      <a href="{% url 'show:knowledge' '13' %}?t=knowledge" title="养鸟知识" target="_self">花鸟</a>
+    </li>
+        <li class="click_zl">
+      <a href="{% url 'show:knowledge' '14' %}?t=knowledge" title="爬虫知识" target="_self">爬虫</a>
+    </li>
+        <li class="click_jk">
+      <a href="{% url 'show:baike' %}" title="宠物百科" target="_self">百科</a>
+    </li>
+        <li class="click_wy">
+      <a href="{% url 'show:question' %}" title="宠物问答" target="_self">问答</a>
+    </li>
+  </ul>
+</div>
+    <div class="am-list-news-bd am_news_list_all">
+    <ul class="am-list">
+
+    </ul>
+    <div class="am_news_load am_news_load_index"><span><i  class="am-icon-spinner am-icon-spin"></i>查看更多 涨知识</span></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block JS %}
+<script>
+$('.pet_filter > li').eq(3).addClass('am-active').siblings().removeClass();
+
+var url = window.location.href;
+var page = 1;
+var tag_id = url.split('/')[url.split('/').length-2];
+if(tag_id == 3){
+  $('.click_qb').addClass('am-active').siblings().removeClass('am-active');
+}else if(tag_id == 4){
+  $('.click_xxs').addClass('am-active').siblings().removeClass('am-active');
+}else if(tag_id == 10){
+  $('.click_zzs').addClass('am-active').siblings().removeClass('am-active');
+}else if(tag_id == 11){
+  $('.click_mr').addClass('am-active').siblings().removeClass('am-active');
+}else if(tag_id == 12){
+  $('.click_xl').addClass('am-active').siblings().removeClass('am-active');
+}else if(tag_id == 13){
+  $('.click_fz').addClass('am-active').siblings().removeClass('am-active');
+}else if(tag_id == 14){
+  $('.click_zl').addClass('am-active').siblings().removeClass('am-active');
+}
+$(function(){
+    load_more();
+});
+
+
+function load_more()
+{
+    var articlelistListHtml = '';
+    $('.am_news_load_index').unbind('click');
+    $.post('/show/fresh/'+tag_id+'/?pn=' + page,{'csrfmiddlewaretoken': $('[name="csrfmiddlewaretoken"]').val()},function(data){
+        $('.am-icon-spinner').hide();
+        // 数据异常
+        if(data.code != 200)
+        {
+            console.log(data.msg);
+            return false;
+        }
+        var list = data.data_list;
+        for( var i = 0 ; i < list.length ; i++ ){
+            if(list[i].cover != ''){
+                articlelistListHtml += '<li class="am-g am-list-item-desced am-list-item-thumbed am-list-item-thumb-left am_list_li"><div class="am-u-sm-3 am-list-thumb am_list_thumb"><a title="'+list[i].title+'" href="/show/knowledge/'+list[i].id+'.html" class=""><img src="'+list[i].cover+'" alt="'+list[i].title+'" class="am_news_list_img"/></a></div><div class=" am-u-sm-9 am-list-main am_list_main"><h3 class="am-list-item-hd am_list_title"><a href="/show/knowledge/'+list[i].id+'.html" title="'+list[i].title+'" class="">'+list[i].title+'</a></h3><div class="am_list_author"><a href="javascript:void(0)"><span class="am_list_author_ico"><img src="'+list[i].user.avatar+'" alt="'+list[i].title+'" /></span><span class="name">'+list[i].user.username+'</span></a><span class="am_news_time">&nbsp;•&nbsp;<time class="timeago" title="2015-08-13 08:02:40 +0800" datetime="2015-08-13 08:02:40 +0800">'+list[i].create_time+'</time></span></div><div class="am-list-item-text am_list_item_text ">'+list[i].content+'</div></div></li>';
+            }else{
+                articlelistListHtml += '<li class="am-g am-list-item-desced am_list_li"><div class=" am-list-main"><h3 class="am-list-item-hd am_list_title am_list_title_s"><a href="/show/knowledge/'+list[i].id+'.html" title="'+list[i].title+'" class="">'+list[i].title+'</a></h3><div class="am_list_author"><a href="javascript:void(0)"><span class="am_list_author_ico"><img src="'+list[i].user.avatar+'" alt="'+list[i].title+'" /></span><span class="name">'+list[i].user.username+'</span></a><span class="am_news_time">&nbsp;•&nbsp;<time class="timeago" title="2015-08-13 08:02:40 +0800" datetime="2015-08-13 08:02:40 +0800">'+list[i].create_time+'</time></span></div><div class="am-list-item-text am_list_item_text">'+list[i].content+'</div></div></li>';
+            }
+         }
+        $('.am-list').append(articlelistListHtml);
+        // 懒加载
+         // 点击加载更多
+        $('.am_news_load_index').on('click',function(){
+            $('.am-icon-spinner').show();
+            if(data.has_next){
+                load_more(page);
+            }else {
+                $('.am_news_load_index').unbind('click');
+                $('.am-icon-spinner').hide();
+                $('.am_news_load_index span').text('已经到底啦~~');
+            }
+        });
+        page++;
+    },'json');
+
+}
+var IScroll = $.AMUI.iScroll;
+var myScroll = new IScroll('#wrapper', { eventPassthrough: true, click: true,scrollX: true, scrollY: false, preventDefault: false });
+wrapperNav();
+$(window).resize(function(){
+wrapperNav();
+});
+function wrapperNav(){
+if($(window).width() < 850 ){
+$('.wrapper_nav').attr('id','wrapper');
+}else{
+  $('.wrapper_nav').attr('id','');
+}}
+</script>
+{% endblock %}

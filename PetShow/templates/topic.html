@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block title %}萌专题_汇集各种萌宠图片与萌宠成长记的专题{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+        <div class="am-g ztlb_nr">
+            <div class="am-u-sm-12 ztlb_list">
+
+            </div>
+            <div class="am_news_load am_news_load_index" style="clear: both; margin-bottom:40px;">
+                <span><i class="am-icon-spinner am-icon-spin"></i>更多专题</span>
+            </div>
+
+        </div>
+{% endblock %}
+
+{% block JS %}
+<script>
+    $('.pet_filter > li').eq(4).addClass('am-active').siblings().removeClass();
+
+    $(function() {
+        auto_window_height();
+        ZhuanTi_list_user()
+        $(window).resize(function() {
+            auto_window_height();
+            ZhuanTi_list_user()
+        });
+
+        function ZhuanTi_list_user() {
+            if ($(window).width() < 810)
+                $('.ztlb_nr_blockc_r_user').each(function() {
+                    $(this).children().each(function(index) {
+                        if (index > 3) {
+                            $(this).hide()
+                        } else {
+                            $(this).show()
+                        }
+                    })
+                });
+        }
+
+        function auto_window_height() {
+            $('.ztlb_nr').css('min-height', $(window).height() - 52 - 220);
+        }
+    });
+    // 分页
+    var page = 1;
+    $(function() {
+        load_more();
+    });
+
+    function load_more() {
+        var topiclist = '';
+        var icolist = '';
+        $('.am_news_load_index').unbind('click');
+        $.post('/show/topic/?pn=' + page, {'csrfmiddlewaretoken': $('[name="csrfmiddlewaretoken"]').val()}, function(data) {
+            $('.am-icon-spinner').hide();
+            // 数据异常
+            if (data.code != 200) {
+                console.log(data.msg);
+                return false;
+            }
+            var list = data.data_list;
+            for (var i = 0; i < list.length; i++) {
+                icolist = '';
+                for (var j = 0; j < list[i].upvote_users.length; j++) {
+                    if (data.data.list[i].user_list[j].avatar) {
+                        icolist += '<img src="' + list[i].upvote_users[j].avatar + '" alt="">';
+                    }
+                }
+                topiclist += '<div class="ztlb_nr_blockc"><div class="ztlb_nr_blockc_l"><img src="' + list[i].cover +
+                    '" alt=""></div><div class="ztlb_nr_blockc_r"><div class="ztlb_nr_blockc_r_info"><div class="ztlb_nr_blockc_r_info_l"><div class="ztlb_nr_blockc_r_info_num">' + list[i].upvote +
+                    '</div><div>点赞</div></div><div class="ztlb_nr_blockc_r_info_r"><div class="ztlb_nr_blockc_r_info_num">' + list[i].views + '</div><div>浏览</div></div></div><a href="/show/topic/' + list[
+                        i].id + '.html" class="ztlb_nr_blockc_r_title">' + list[i].title + '</a><span class="ztlb_nr_blockc_r_nr">' + list[i].content + '</span><div class="ztlb_nr_blockc_r_user">点赞用户' + icolist +
+                    '</div></div></div>';
+            }
+            $('.ztlb_list').append(topiclist);
+            // 点击加载更多
+            $('.am_news_load_index').on('click', function() {
+                $('.am-icon-spinner').show();
+                if(data.has_next){
+                    load_more(page);
+                }else {
+                    $('.am_news_load_index').unbind('click');
+                    $('.am-icon-spinner').hide();
+                    $('.am_news_load_index span').text('已经到底啦~~');
+                }
+            });
+            page++;
+        }, 'json');
+    }
+</script>
+{% endblock %}

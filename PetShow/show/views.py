@@ -1,3 +1,5 @@
+import random
+
 from django.contrib.auth.hashers import make_password
 from django.core.paginator import Paginator
 from django.http import JsonResponse
@@ -26,11 +28,15 @@ def index(request):
     # return render(request, 'index.html')
 
 
-def fresh(request, fid='0'):
+def fresh_know(request, fid='0'):
     if fid == '0':
         return JsonResponse(status_code.REQUEST_PARAM_ERROR)
     if request.method == 'GET':
-        return render(request, 'fresh.html')
+        t = request.GET.get('t')
+        if t == 'fresh':
+            return render(request, 'fresh.html')
+        elif t == 'knowledge':
+            return render(request, 'knowledge.html')
     elif request.method == 'POST':
         page_now = request.GET.get('pn', 1)
         page_size = request.GET.get('ps', 10)
@@ -63,16 +69,34 @@ def fresh(request, fid='0'):
             return JsonResponse(status_code.DATABASE_ERROR)
 
 
-def fresh_detail(request, fid='0', aid='0'):
-    if fid == '0' or aid == '0':
+def fresh_know_detail(request, aid='0'):
+    if aid == '0':
         return JsonResponse(status_code.REQUEST_PARAM_ERROR)
     if request.method == 'GET':
         article = Article.objects.filter(id=aid).first()
         if not article:
             return JsonResponse(status_code.ARTICLE_NOT_EXISTS)
-        res = status_code.SUCCESS
-        res['data'] = article.to_dict()
-        return JsonResponse(res)
+        # res = status_code.SUCCESS
+        # res['data'] = article.to_dict()
+        # return JsonResponse(res)
+        return render(request, 'article.html', {'article': article})
+
+
+def show_more(request, tid):
+    if request.method == 'GET':
+        try:
+            articles = Article.objects.filter(t_id=tid).all()
+            count = articles.count()
+            if count > 5:
+                arts = random.sample(articles, k=5)
+            else:
+                arts = articles
+            res = status_code.SUCCESS
+            res['data_list'] = [art.to_dict() for art in arts]
+            return JsonResponse(res)
+        except BaseException as e:
+            print(e)
+            return JsonResponse(status_code.DATABASE_ERROR)
 
 
 def baike(request):
@@ -101,7 +125,20 @@ def baike(request):
             return JsonResponse(status_code.DATABASE_ERROR)
 
 
-def question(request, qid='0'):
+def baike_detail(request, bid='0'):
+    if bid == '0':
+        return JsonResponse(status_code.REQUEST_PARAM_ERROR)
+    if request.method == 'GET':
+        baike = Baike.objects.filter(id=bid).first()
+        if not baike:
+            return JsonResponse(status_code.BAIKE_NOT_EXISTS)
+        # res = status_code.SUCCESS
+        # res['data'] = baike.to_dict()
+        # return JsonResponse(res)
+        return render(request, 'baike_detail.html', {'baike': baike})
+
+
+def question(request):
     if request.method == 'GET':
         return render(request, 'question.html')
     elif request.method == 'POST':
@@ -109,32 +146,37 @@ def question(request, qid='0'):
         page_size = request.GET.get('ps', 10)
 
         try:
-            if qid == '0':
-                questions = Question.objects.all().order_by('-create_time')
-                count = questions.count()
-                paginator = Paginator(questions, page_size)
-                pages = paginator.page(int(page_now))
-                res = status_code.SUCCESS
-                res['data_list'] = [bk.to_dict() for bk in pages.object_list]
-                res['data_count'] = count
-                res['page_now'] = page_now
-                res['page_size'] = page_size
-                res['page_count'] = pages.paginator.page_range[-1]
-                res['has_next'] = pages.has_next()
-                res['has_prev'] = pages.has_previous()
-                return JsonResponse(res)
-            else:
-                question = Question.objects.filter(id=qid)
-                res = status_code.SUCCESS
-                res['data'] = question.to_dict()
-                return JsonResponse(res)
-
+            questions = Question.objects.all().order_by('-create_time')
+            count = questions.count()
+            paginator = Paginator(questions, page_size)
+            pages = paginator.page(int(page_now))
+            res = status_code.SUCCESS
+            res['data_list'] = [bk.to_dict() for bk in pages.object_list]
+            res['data_count'] = count
+            res['page_now'] = page_now
+            res['page_size'] = page_size
+            res['page_count'] = pages.paginator.page_range[-1]
+            res['has_next'] = pages.has_next()
+            res['has_prev'] = pages.has_previous()
+            return JsonResponse(res)
         except BaseException as e:
             print(e)
             return JsonResponse(status_code.DATABASE_ERROR)
 
 
-def topic(request, tid='0'):
+def question_detail(request, qid='0'):
+    if qid == '0':
+        return JsonResponse(status_code.REQUEST_PARAM_ERROR)
+    if request.method == 'GET':
+        ques = Question.objects.filter(id=qid).first()
+        if not ques:
+            return JsonResponse(status_code.BAIKE_NOT_EXISTS)
+        res = status_code.SUCCESS
+        res['data'] = ques.to_dict()
+        return JsonResponse(res)
+
+
+def topic(request):
     if request.method == 'GET':
         return render(request, 'topic.html')
     elif request.method == 'POST':
@@ -142,26 +184,31 @@ def topic(request, tid='0'):
         page_size = request.GET.get('ps', 10)
 
         try:
-            if tid == '0':
-                topics = Topic.objects.all().order_by('-create_time')
-                count = topics.count()
-                paginator = Paginator(topics, page_size)
-                pages = paginator.page(int(page_now))
-                res = status_code.SUCCESS
-                res['data_list'] = [topic.to_dict() for topic in pages.object_list]
-                res['data_count'] = count
-                res['page_now'] = page_now
-                res['page_size'] = page_size
-                res['page_count'] = pages.paginator.page_range[-1]
-                res['has_next'] = pages.has_next()
-                res['has_prev'] = pages.has_previous()
-                return JsonResponse(res)
-            else:
-                topic = Topic.objects.filter(id=tid)
-                res = status_code.SUCCESS
-                res['data'] = topic.to_dict()
-                return JsonResponse(res)
-
+            topics = Topic.objects.all().order_by('-create_time')
+            count = topics.count()
+            paginator = Paginator(topics, page_size)
+            pages = paginator.page(int(page_now))
+            res = status_code.SUCCESS
+            res['data_list'] = [topic.to_dict() for topic in pages.object_list]
+            res['data_count'] = count
+            res['page_now'] = page_now
+            res['page_size'] = page_size
+            res['page_count'] = pages.paginator.page_range[-1]
+            res['has_next'] = pages.has_next()
+            res['has_prev'] = pages.has_previous()
+            return JsonResponse(res)
         except BaseException as e:
             print(e)
             return JsonResponse(status_code.DATABASE_ERROR)
+
+
+def topic_detail(request, tid='0'):
+    if tid == '0':
+        return JsonResponse(status_code.REQUEST_PARAM_ERROR)
+    if request.method == 'GET':
+        top = Topic.objects.filter(id=tid).first()
+        if not top:
+            return JsonResponse(status_code.TOPIC_NOT_EXISTS)
+        res = status_code.SUCCESS
+        res['data'] = top.to_full_dict()
+        return JsonResponse(res)

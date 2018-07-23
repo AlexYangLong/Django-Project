@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% block title %}金毛寻回犬 黄金猎犬宠物百科{% endblock %}
+
+{% block content %}
+<div class="pet_mian">
+<div class="pet_wiki">
+    <div class="pet_wiki_head">
+        <div class="pet_wiki_head_info_ico">
+            <img src="{{ baike.cover }}" alt="{{ baike.name }} ">
+        </div>
+        <div class="pet_wiki_head_info_title">{{ baike.name }} <span>{{ baike.name_en }}</span>
+        </div>
+    </div>
+      <div data-am-widget="tabs"
+       class="am-tabs am-tabs-d2 pet_wiki_tab"
+        >
+      <ul class="am-tabs-nav am-cf pet_wiki_tab_content">
+          <li class="am-active"><a href="[data-tab-panel-0]">基本资料</a></li>
+          <li class=""><a href="[data-tab-panel-1]">相关信息</a></li>
+      </ul>
+      <div class="am-tabs-bd pet_wiki_tab_block">
+          <div data-tab-panel-0 class="am-tab-panel am-active pet_wiki_tab_block_content">
+                                <div class="pet_wiki_text_line">
+                    <div class="pet_wiki_text_line_l">名称</div>
+                    <div class="pet_wiki_text_line_c">{{ baike.name }} </div>
+                    <div class="pet_wiki_text_line_r">
+                        <i class="iconfont">&#xe617;</i>
+                    </div>
+                </div>
+                                                <div class="pet_wiki_text_line">
+                    <div class="pet_wiki_text_line_l">别名</div>
+                    <div class="pet_wiki_text_line_c">{{ baike.other_name }}</div>
+                    <div class="pet_wiki_text_line_r">
+                        <i class="iconfont">&#xe60d;</i>
+                    </div>
+                </div>
+                                                <div class="pet_wiki_text_line">
+                    <div class="pet_wiki_text_line_l">英文名</div>
+                    <div class="pet_wiki_text_line_c">{{ baike.name_en }}</div>
+                    <div class="pet_wiki_text_line_r">
+                        <i class="iconfont">&#xe615;</i>
+                    </div>
+                </div>
+                                                <div class="pet_wiki_text_line">
+                    <div class="pet_wiki_text_line_l">体型</div>
+                    <div class="pet_wiki_text_line_c">{{ baike.shapes }}</div>
+                    <div class="pet_wiki_text_line_r">
+                        <i class="iconfont">&#xe619;</i>
+                    </div>
+                </div>
+                                                                                                                                <div class="pet_wiki_text_line">
+                    <div class="pet_wiki_text_line_l">寿命</div>
+                    <div class="pet_wiki_text_line_c">{{ baike.ages }}</div>
+                    <div class="pet_wiki_text_line_r">
+                        <i class="iconfont">&#xe618;</i>
+                    </div>
+                </div>
+                                                                               <div class="pet_wiki_text_line">
+                    <div class="pet_wiki_text_line_l">FCI分组</div>
+                    <div class="pet_wiki_text_line_c">{{ baike.fci_group }}</div>
+                    <div class="pet_wiki_text_line_r">
+                        <i class="iconfont">&#xe618;</i>
+                    </div>
+                </div>
+                                                     <div class="pet_wiki_text_line">
+                    <div class="pet_wiki_text_line_l">AKC分组</div>
+                    <div class="pet_wiki_text_line_c">{{ baike.akc_group }}</div>
+                    <div class="pet_wiki_text_line_r">
+                        <i class="iconfont">&#xe618;</i>
+                    </div>
+                </div>
+                <p>
+
+                          </div>
+          <div data-tab-panel-1 class="am-tab-panel pet_wiki_tab_block_content">
+                                              <div class="pet_wiki_more_info">
+                <div class="pet_wiki_more_info_title"><i  class="iconfont pet_nav_xinxianshi pet_wiki_color_f26765">&#xe61c;</i><div class="pet_wiki_more_info_title_font">{{ baike.name }} 历史<span>history</span></div></div>
+                <div class="pet_wiki_more_info_text">{{ baike.history }}</div>
+            </div>
+                                                                                       <div class="pet_wiki_more_info">
+                <div class="pet_wiki_more_info_title"><i  class="iconfont  pet_wiki_color_7f2d00">&#xe61c;</i><div class="pet_wiki_more_info_title_font">{{ baike.name }} 性格<span>character</span></div></div>
+                <div class="pet_wiki_more_info_text">{{ baike.character }}</div>
+            </div>
+                                                      <div class="pet_wiki_more_info">
+                <div class="pet_wiki_more_info_title"><i  class="iconfont  pet_wiki_color_fd7a49">&#xe61c;</i><div class="pet_wiki_more_info_title_font">{{ baike.name }} 适合人群<span>crowd</span></div></div>
+                <div class="pet_wiki_more_info_text">{{ baike.suit_person }}</div>
+            </div>
+                                                      <div class="pet_wiki_more_info">
+                <div class="pet_wiki_more_info_title"><i  class="iconfont  pet_wiki_color_19cf8a">&#xe61c;</i><div class="pet_wiki_more_info_title_font">{{ baike.name }} 适合环境<span>environment</span></div></div>
+                <div class="pet_wiki_more_info_text">{{ baike.suit_environment }}</div>
+            </div>
+          <!--                                             <div class="pet_wiki_more_info">
+                <div class="pet_wiki_more_info_title"><i  class="iconfont pet_nav_xinxianshi">&#xe61c;</i><div class="pet_wiki_more_info_title_font">毛色<span></span></div></div>
+                <div class="pet_wiki_more_info_text">[{"picture":"\/pet_show\/2015_09\/8f7d3aa81409eb8a484d645547e5e2e6e8bea5b3c8c0ab2afa87b64c7e547a10.png","word":"\u91d1\u8272"},{"picture":"\/pet_show\/2015_09\/238a421312900b768bc18cf9e7cf444fead55e43d42cfee0dc189c799a9b5e0e.png","word":"\u5976\u6cb9\u8272"}]</div>
+            </div>
+           -->
+                                                      <div class="pet_wiki_more_info">
+                <div class="pet_wiki_more_info_title"><i  class="iconfont pet_wiki_color_4493f7">&#xe61c;</i><div class="pet_wiki_more_info_title_font">{{ baike.name }} 毛色描述<span>hair color description</span></div></div>
+                <div class="pet_wiki_more_info_text">{{ baike.hair_color }}</div>
+            </div>
+                                                                <div class="pet_wiki_more_info">
+                <div class="pet_wiki_more_info_title"><i  class="iconfont pet_wiki_color_7fd12a">&#xe61c;</i><div class="pet_wiki_more_info_title_font">{{ baike.name }} 疾病<span>disease</span></div></div>
+                <div class="pet_wiki_more_info_text">{{ baike.disease }}</div>
+            </div>
+                                                                                                          <div class="pet_wiki_more_info">
+                <div class="pet_wiki_more_info_title"><i  class="iconfont pet_wiki_color_f26765">&#xe61c;</i><div class="pet_wiki_more_info_title_font">{{ baike.name }} 百科标签<span>baike tags</span></div></div>
+                <div class="pet_wiki_more_info_text">{{ baike.tags }}</div>
+            </div>
+
+          </div>
+
+      </div>
+  </div>
+<br>
+<br>
+</div>
+
+</div>
+{% endblock %}
+
+{% block JS %}
+<script>
+$('.pet_filter > li').eq(3).addClass('am-active').siblings().removeClass();
+
+$(function(){
+   $('.pet_head_gd_ico').on('click',function(){
+        $('.pet_more_list').addClass('pet_more_list_show');
+   });
+    $('.pet_more_close').on('click',function(){
+        $('.pet_more_list').removeClass('pet_more_list_show');
+    });
+});
+</script>
+{% endblock %}
