@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% block title %}{{ topic.title }}_宠物萌专题_宠物秀{% endblock %}
+    {% block CSS %}
+    <style>
+    .list_rq{ width: 810px;margin: 0 auto;}
+ #main{
+        position: relative;
+        overflow: hidden;
+
+
+    }
+    .pin{
+        float:left;
+    }
+    .box{
+      background: #fff;
+      padding: 10px;
+       width:192px;
+       margin: 5px;
+       margin-top: 5px;
+    }
+    .box img{
+        width: 100%;
+        height:auto;
+    }
+
+    </style>
+{% endblock %}
+{% block content %}
+    {% csrf_token %}
+<div class="am-g ztlb_nr ztlb_nr_list">
+  <div class="am-u-sm-12">
+    <div class="ztlb_nr_block">
+<div class="ztlb_nr_block_l">
+    {% if topic.cover %}
+  <img src="{{ topic.cover }}" alt="">
+    {% endif %}
+</div>
+<div class="ztlb_nr_block_r">
+<div class="ztlb_nr_block_r_info">
+    <div class="ztlb_nr_block_r_info_l">
+<div class="ztlb_nr_block_r_info_num">{{ topic.upvotetopic_set.all.count }}</div>
+<div>点赞</div>
+    </div>
+    <div class="ztlb_nr_block_r_info_r">
+<div class="ztlb_nr_block_r_info_num">{{ topic.views }}</div>
+<div>浏览</div>
+    </div>
+</div>
+<a class="ztlb_nr_block_r_title">{{ topic.title }}</a>
+<span class="ztlb_nr_block_r_nr">{{ topic.content }}</span>
+<div class="ztlb_nr_block_r_user">
+点赞用户
+    {% for user in topic.upvotetopic_set.all %}
+         <span><img src="{{ user.avatar }}"/></span>
+    {% endfor %}
+</div>
+</div>
+  </div>
+{#<div class="ztlb_nr_block_r_info_copy_bg">#}
+{#<span>收录：82</span>#}
+{#<span>人气：74</span>#}
+{#</div>#}
+{#<div class="ztlb_nr_block_r_info_copy">#}
+{##}
+{#</div>#}
+
+
+  </div>
+
+</div>
+
+<div class="list_rq">
+<div  data-am-widget="gallery" id="main"  data-am-gallery="{ pureview: true }">
+
+</div>
+
+
+</div>
+  <div class="am_news_load am_news_load_index" style="clear: both; margin-bottom:80px;"><span><i  class="am-icon-spinner am-icon-spin"></i>更多猫猫狗狗的萌宠照片</span></div>
+{% endblock %}
+
+{% block JS %}
+{#<script src="/static/js/masonry.pkgd.min.js"></script>#}
+{#<script src="/static/js/imagesloaded.pkgd.min.js"></script>#}
+<script>
+$('.pet_filter > li').eq(4).addClass('am-active').siblings().removeClass();
+
+// 分页
+var page = 1;
+var list = window.location.href.split('/');
+var tag_id = list[list.length-1].split('.')[0];
+$(function(){
+    load_more();
+});
+function load_more()
+{
+    var topiclist = '';
+    $('.am_news_load_index').unbind('click');
+    $.post('/show/topic_imgs/'+tag_id+'/?pn=' + page,{'csrfmiddlewaretoken': $('[name="csrfmiddlewaretoken"]').val()},function(data){
+        $('.am-icon-spinner').hide();
+        // 数据异常
+        if(data.code != 200)
+        {
+            console.log(data.msg);
+            return false;
+        }
+        var list = data.data_list;
+        for( var i = 0 ; i < list.length ; i++ ){
+            // topiclist += '<li><div class="am-gallery-item am_list_block"><a href="###" class="am_img_bg"><img class="am_img animated" src="'+data.data.list[i].picture+'"alt=""/></a></div></li>';
+            topiclist += '<div class="pin"><div class="box"><img src="/static/'+list[i].pic+'"/></div></div>';
+
+         }
+
+        $('#main').append(topiclist);
+         $('#main .box img').load(function(){
+            waterfall();
+            $('#main').height($('#main > div').last().offset().top);
+            });
+
+
+        //点击加载更多
+        $('.am_news_load_index').on('click',function(){
+            $('.am-icon-spinner').show();
+            if(data.has_next){
+                load_more(page);
+                $('#main').height($('#main > div').last().offset().top);
+            }else{
+                $('.am-icon-spinner').hide();
+                $('.am_news_load_index').html('已经到底啦！');
+            }
+        });
+        page++;
+    },'json');
+
+}
+
+function waterfall(parent,pin){
+    var $aPin = $( "#main>div" );
+    var iPinW = $aPin.eq( 0 ).width();// 一个块框pin的宽
+    var num = Math.floor( $("#main").width() / iPinW );//每行中能容纳的pin个数【窗口宽度除以一个块框宽度】
+    //oParent.style.cssText='width:'+iPinW*num+'px;ma rgin:0 auto;';//设置父级居中样式：定宽+自动水平外边距
+    $( "#main" ).css({
+        'width:' : '810px',
+        'margin': '0 auto'
+    });
+
+    var pinHArr=[];//用于存储 每列中的所有块框相加的高度。
+
+    $aPin.each( function( index, value ){
+        var pinH = $aPin.eq( index ).height();
+        if( index < num ){
+            pinHArr[ index ] = pinH; //第一行中的num个块框pin 先添加进数组pinHArr
+        }else{
+            var minH = Math.min.apply( null, pinHArr );//数组pinHArr中的最小值minH
+            var minHIndex = $.inArray( minH, pinHArr );
+            $( value ).css({
+                'position': 'absolute',
+                'top': minH,
+                'left': $aPin.eq( minHIndex ).position().left
+            });
+            //数组 最小高元素的高 + 添加上的aPin[i]块框高
+            pinHArr[ minHIndex ] += $aPin.eq( index ).height();//更新添加了块框后的列高
+        }
+    });
+}
+</script>
+{% endblock %}

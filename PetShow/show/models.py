@@ -132,7 +132,7 @@ class Article(models.Model):
     content = models.TextField(null=False)
 
     t = models.ForeignKey(Type, null=False)
-    user = models.ForeignKey(User, null=False)
+    admin = models.ForeignKey(Admin, null=True)
 
     create_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
@@ -147,7 +147,7 @@ class Article(models.Model):
             'cover': self.cover if self.cover else '',
             'content': self.content,
             'type': self.t.to_dict(),
-            'user': self.user.to_simple_dict(),
+            'admin': self.admin.to_simple_dict(),
             'create_time': self.create_time
         }
 

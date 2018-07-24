@@ -22,6 +22,7 @@ urlpatterns = [
 
     url(r'^topic/$', views.topic, name='topic'),
     url(r'^topic/(\d+).html$', views.topic_detail),
+    url(r'^topic_imgs/(\d+)/$', views.topic_imgs),
 
 ]
 

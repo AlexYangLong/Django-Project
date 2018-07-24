@@ -8,7 +8,7 @@ from django.shortcuts import render
 # Create your views here.
 
 from show import status_code
-from show.models import Article, Type, Admin, Role, User, Baike, Question, Topic
+from show.models import Article, Type, Admin, Role, User, Baike, Question, Topic, TopicPic
 
 
 def page_not_found(request):
@@ -171,9 +171,10 @@ def question_detail(request, qid='0'):
         ques = Question.objects.filter(id=qid).first()
         if not ques:
             return JsonResponse(status_code.BAIKE_NOT_EXISTS)
-        res = status_code.SUCCESS
-        res['data'] = ques.to_dict()
-        return JsonResponse(res)
+        # res = status_code.SUCCESS
+        # res['data'] = ques.to_dict()
+        # return JsonResponse(res)
+        return render(request, 'question_detail.html', {'question': ques})
 
 
 def topic(request):
@@ -209,6 +210,37 @@ def topic_detail(request, tid='0'):
         top = Topic.objects.filter(id=tid).first()
         if not top:
             return JsonResponse(status_code.TOPIC_NOT_EXISTS)
+        return render(request, 'topic_detail.html', {'topic': top})
+    elif request.method == 'POST':
+        top = Topic.objects.filter(id=tid).first()
+        if not top:
+            return JsonResponse(status_code.TOPIC_NOT_EXISTS)
         res = status_code.SUCCESS
         res['data'] = top.to_full_dict()
         return JsonResponse(res)
+
+
+def topic_imgs(request, tid='0'):
+    if tid == '0':
+        return JsonResponse(status_code.REQUEST_PARAM_ERROR)
+    if request.method == 'POST':
+        page_now = request.GET.get('pn', 1)
+        page_size = request.GET.get('ps', 10)
+
+        try:
+            pics = TopicPic.objects.filter(topic_id=tid).all().order_by('-create_time')
+            count = pics.count()
+            paginator = Paginator(pics, page_size)
+            pages = paginator.page(int(page_now))
+            res = status_code.SUCCESS
+            res['data_list'] = [pic.to_dict() for pic in pages.object_list]
+            res['data_count'] = count
+            res['page_now'] = page_now
+            res['page_size'] = page_size
+            res['page_count'] = pages.paginator.page_range[-1]
+            res['has_next'] = pages.has_next()
+            res['has_prev'] = pages.has_previous()
+            return JsonResponse(res)
+        except BaseException as e:
+            print(e)
+            return JsonResponse(status_code.DATABASE_ERROR)

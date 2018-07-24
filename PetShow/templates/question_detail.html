@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}{{ question.question }}_宠物问答{% endblock %}
+
+{% block content %}
+<div class="pet_mian" style="height: 295px;padding-bottom: 800px;">
+<div class="pet_question">
+    <div class="pet_question_to">
+    <div class="pet_question_to_title">问：{{ question.question }}</div>
+    <div class="pet_question_to_content">{{ question.subtitle }}</div>
+<div class="pet_question_to_content_line"><img src="/static/qaline.png" alt=""></div>
+</div>
+  <div class="pet_question_form">
+    <div class="pet_question_form_title"><i class="am-icon-check-circle-o"></i>宠物问答</div>
+      {% for answer in question.answer_set.all %}
+        <div class="pet_question_form_content">
+            <div>
+                {% if answer.user.avatar %}
+                <span>{{ answer.user.avatar }}</span>
+                {% endif %}
+                <span>{{ answer.user.username }}</span> 于 <span>{{ answer.create_time }}</span> 回答道：</div>
+            {{ answer.content }}
+        </div>
+        <br>
+      {% endfor %}
+  </div>
+</div>
+<br>
+</div>
+{% endblock %}
+
+{% block JS %}
+<script>
+$('.pet_filter > li').eq(3).addClass('am-active').siblings().removeClass();
+
+$(function(){
+        $('.pet_mian').height($(window).height()-$('.am_footer').height()-$('.am-topbar').height()-100);
+        $('.pet_head_gd_ico').on('click',function(){
+            $('.pet_more_list').addClass('pet_more_list_show');
+       });
+        $('.pet_more_close').on('click',function(){
+            $('.pet_more_list').removeClass('pet_more_list_show');
+        });
+});
+</script>
+{% endblock %}
