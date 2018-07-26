@@ -5,8 +5,8 @@
 <div class="pet_mian" style="height: 295px;padding-bottom: 800px;">
 <div class="pet_question">
     <div class="pet_question_to">
-    <div class="pet_question_to_title">问：{{ question.question }}</div>
-    <div class="pet_question_to_content">{{ question.subtitle }}</div>
+    <div class="pet_question_to_title">问：{{ question.question|safe }}</div>
+    <div class="pet_question_to_content">{{ question.subtitle|safe }}</div>
 <div class="pet_question_to_content_line"><img src="/static/qaline.png" alt=""></div>
 </div>
   <div class="pet_question_form">
@@ -15,10 +15,10 @@
         <div class="pet_question_form_content">
             <div>
                 {% if answer.user.avatar %}
-                <span>{{ answer.user.avatar }}</span>
+                <span class="am_list_author_ico"><img src="{{ answer.user.avatar }}"></span>
                 {% endif %}
                 <span>{{ answer.user.username }}</span> 于 <span>{{ answer.create_time }}</span> 回答道：</div>
-            {{ answer.content }}
+            {{ answer.content|safe }}
         </div>
         <br>
       {% endfor %}

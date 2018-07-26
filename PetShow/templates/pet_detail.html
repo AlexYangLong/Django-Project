@@ -1,0 +1,330 @@
+
+{% extends 'base.html' %}
+
+{% block title %}来自{{ pet.username }}的猫狗萌图_还有哈士奇_拉布拉多_萨摩耶_布偶猫_的晒图_宠物秀{% endblock %}
+    {% block CSS %}
+        <link rel="stylesheet" href="/static/css/swiper.min.css">
+    <style>
+    .swiper-pagination-bullet { position: absolute; left:0px; text-align: center; background:none; bottom: 60px; opacity: 1;display: none; width: 70px; font-size: 1.1rem;font-family:"Segoe UI","Lucida Grande",Helvetica,Arial,"Microsoft YaHei"; color: #969696; }
+    .swiper-pagination-bullet span { color: #efefef; }
+    .swiper-pagination-bullet img { width: 38px; height: 38px;border-radius: 50%; -webkit-border-radius: 50%;}
+    .swiper-pagination-bullet-active { display: block;}
+    .swiper-pagination-bullet .col-ff6e6e { color:#ff6e6e;}
+    .swiper-pagination-bullet .col-969696{ color:#969696;}
+    .swiper-pagination-clickable .swiper-pagination-bullet {cursor:auto;}
+    .font-center {display: box; display: -webkit-box; display: -moz-box; -webkit-box-pack:center;-moz-box-pack:center;-webkit-box-align:center;-moz-box-align:center; }
+    .pet_album_list {width: 100%;height: auto;position: relative;}
+    .pet_album_list_photo { width: 100%;}
+    .pet_album_list_photo img { width: 100%;}
+    /* 语音按钮 */
+    .pet-voice { position: absolute; top:50%; right:0; background: url(http://assets.petshow.cc/pc/v2/img/yybg.png) no-repeat; z-index: 20; color:#fff; }
+    .pet-voice-stop { background: url(http://assets.petshow.cc/pc/v2/img/yybgs.png) no-repeat;}
+    .pet_album_list_graffito {position: absolute;z-index: 5; top:0; left: 0;  width: 100%; }
+    </style>
+    {% endblock %}
+
+{% block content %}
+{% csrf_token %}
+<div class="am_tuya">
+<div class="am_tuya_user">
+<div class="am_tuya_user_ico">
+                <img src="{{ pet.avatar }}" alt="{{ pet.username }}">
+          </div>
+<div class="am_tuya_user_info">
+  <div class="am_tuya_user_info_name">
+      {{ pet.username }}的宠物
+  </div>
+  <div class="am_tuya_user_info_coordinate">{{ pet.create_time }}&nbsp;{{ pet.city }}</div>
+</div>
+</div>
+
+<div class="am_tuya_content">
+<div class="am_tuya_content_l">
+  <div class="am_albums">
+  <div class="pet_album_list">
+      {% if pet.t == '语音涂鸦' %}
+      <div class="pet-voice">{{ pet.v_second }}</div>
+      <audio class="pet-music" src="{{ pet.video }}"></audio>
+      {% endif %}
+        <div class="swiper-container pet_album_list_graffito" style="position: absolute;cursor:pointer;">
+        
+        <div class="swiper-wrapper">
+        </div>
+      </div>
+
+      <div class="swiper-pagination" style="position: absolute; bottom:0; left:0;"></div>
+
+        <div class="pet_album_list_photo">
+          <img src="{{ pet.picture }}">
+        </div>
+  </div>
+  </div>
+  <div class="am_tuya_more">
+      <div class="am_tuya_comment_list">
+
+
+
+  </div>
+  </div>
+<!--   <div class="am_news_load"><span><i  class="am-icon-spinner am-icon-spin"></i> 查看更多讨论</span></div> -->
+</div>
+<div class="am_tuya_content_r">
+<ul class="am_tuya_r_info">
+  <li><i class="am-icon-heart"></i><span>{{ pet.like_num }}  人喜欢宠物</span></li>
+  <li><i class="am-icon-comments"></i><span>{{ pet.petcomment_set.all.count }}  条宠物讨论</span></li>
+  <!-- <li><i class="am-icon-eye"></i><span>0 次查看</span></li> -->
+<!--   <li><i class="am-icon-share-square-o"></i><span>分享涂鸦</span></li>-->
+  <li><i class="am-icon-clock-o"></i><span>发布于 {{ pet.create_time }}</span></li>
+</ul>
+<!-- <ul class="am_tuya_tag">
+    <li><span class="am_tuya_tag_title">TAG</span></li>
+    <li><a href=""><span>汪星人</span><span>15623</span></a></li>
+    <li><a href=""><span>柯基</span><span>6251</span></a></li>
+    <li><a href=""><span>主人合影</span><span>3256</span></a></li>
+    <li><a href=""><span>棕白色</span><span>54</span></a></li>
+</ul> -->
+<br>
+<div class="page_hot">
+            <div class="page_hot_title">人气涂鸦</div>
+            <div class="page_hot_list">
+</div>
+          </div>
+</div>
+</div>
+
+</div>
+<div class="am_tuya_cai">
+{#<script type="text/javascript">#}
+{#    /*20:3 创建于 2016/8/9*/#}
+{#    var cpro_id = "u2728432";#}
+{#</script>#}
+{#<script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/cm.js"></script>#}
+<div class="am_tuya_cai_ti">猜你喜欢</div>
+<div class="am-g am-imglist">
+    <ul data-am-widget="gallery" class="am-gallery am-avg-sm-2
+  am-avg-md-3 am-avg-lg-4 am-gallery-default cixh_list" >
+
+</ul>
+<!-- <div class="am_tuya_ckgd"><i class="am-icon-spinner am-icon-spin"></i><a href=""> 查看更多</a></div> -->
+</div>
+
+
+</div>
+{% endblock %}
+
+{% block JS %}
+<script src="/static/js/swiper.min.js"></script>
+<script>
+var list = window.location.href.split('/');
+var pet_id = list[list.length-1].split('.')[0];
+var video = "{{ pet.video }}";
+ $(function(){
+
+  if ($(window).width() < 600 ) {
+ $('.am_list_item_text').each(
+  function(){
+     if($(this).text().length >= 26){
+        $(this).html($(this).text().substr(0,26)+'...');
+     }});}
+
+});
+ //获取语音图标信息 在640宽度下语音图标尺寸为 152*70 pet-voice-stop text-indent: 35px;
+          if (video != "") {
+            var get_photo_width= $('.pet_album_list_photo').width();
+            $('.pet_album_list_graffito').height() == get_photo_width;
+            var pet_voice_w = 152 * get_photo_width / 640;
+            var pet_voice_h = 70 * get_photo_width / 640;
+            var pet_voice_z = 80 * get_photo_width / 640;
+            var pet_voice_f = 24 * get_photo_width / 640;
+            $('.pet-voice').css({
+              'width': pet_voice_w,
+              'height': pet_voice_h,
+              'line-height': pet_voice_h + 'px',
+              'text-indent': pet_voice_z,
+              'font-size': pet_voice_f
+            });
+            $('.pet-voice').css('background-size', pet_voice_w);
+            var audio = document.querySelector('audio')
+            $('.pet-voice').on('click', function() {
+              audio.paused ? audio.play() : audio.pause();
+              $('.pet-voice').hasClass('pet-voice-stop') ? $('.pet-voice').removeClass('pet-voice-stop') : $('.pet-voice').addClass('pet-voice-stop');
+            });
+            audio.onended = function() {
+              $('.pet-voice').removeClass('pet-voice-stop');
+            }
+          }
+$.post('/show/get_doodle/'+pet_id+'/',{'csrfmiddlewaretoken': $('[name="csrfmiddlewaretoken"]').val()},function(data){
+      // 数据异常
+      if(data.code != 200)
+      {
+          console.log(data.msg);
+          return false;
+      }
+      var list = data.data_list;
+
+      // 单张涂鸦禁止轮播开关
+      var loop_switch = true;
+      if(list.length <= 1 ){
+          loop_switch = false;
+      }
+      var add_graffito = '';
+      var text_emoticon = '';
+      // 涂鸦方法
+      var graffito_z_index = 99;
+      function auto_count(){
+          // 获取照片宽度
+          var photo_width= $('.pet_album_list_photo').width();
+          // 计算涂鸦比例
+          var graffiti_size        = 100;
+          var graffito_scale       = photo_width / graffiti_size;
+          var graffito_scale_count = 300 * photo_width / 640;
+          
+          // 涂鸦文字计算
+          for(var i=0;i<list.length;i++){
+              // 清空涂鸦节点重复内容
+              var graffito = '';
+              text_emoticon = '';
+              var rotateYx = 1;
+              // 循环用户涂鸦数量
+              graffito_z_index--;
+              for(var j=0;j<list[i].doodle_list.length;j++){
+                  var d_list = list[i].doodle_list[j];
+                  // 获取x轴坐标/y轴坐标/缩放比例/旋转/涂鸦图片本体
+                  var graffito_x       = d_list.center_x;
+                  var graffito_y       = d_list.center_y;
+                  var graffito_zoom    = d_list.zoom;
+                  var graffito_rotate  = d_list.angle;
+                  var graffito_picture = d_list.picture;
+                  var graffito_upper_left_x  = d_list.rect_upper_left_x;
+                  var graffito_upper_left_y  = d_list.rect_upper_left_y;
+                  var graffito_rect_width    = d_list.rect_width;
+                  var graffito_rect_height   = d_list.rect_height;
+
+                  if(d_list.is_turn){
+                      rotateYx = '-1';
+                  }
+                  // 计算涂鸦缩放宽度 页面比例 * 缩放比例
+                  // 计算涂鸦 xy 轴坐标 计算方式 ( 服务器涂鸦 x 轴坐标 * 显示倍率 * 涂鸦底图宽度比例倍数 - (为计算中点减去涂鸦一半宽度))
+                  var over_graffito_width  = parseInt(graffito_scale_count *  graffito_zoom);
+                  var over_graffito_x      = parseInt(graffito_x * graffiti_size * graffito_scale - ( over_graffito_width / 2 ));
+                  var over_graffito_y      = parseInt(graffito_y * graffiti_size * graffito_scale - ( over_graffito_width / 2 ));
+                  var over_upper_left_x    = parseInt(graffito_upper_left_x * photo_width / 640 * graffito_zoom);
+                  var over_upper_left_y    = parseInt(graffito_upper_left_y * photo_width / 640 * graffito_zoom);
+                  var over_rect_width      = parseInt(graffito_rect_width   * photo_width / 640 * graffito_zoom );
+                  var over_rect_height     = parseInt(graffito_rect_height  * photo_width / 640 * graffito_zoom );
+                  if (d_list.word == '') {
+                    text_emoticon = '<div class="font-center" style="color:#ffffff; text-align:center;text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-webkit-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;*filter: Glow(color=#000, strength=1);position: absolute;-webkit-transform:rotate(' + graffito_rotate + 'deg);transform:rotate(' + graffito_rotate + 'deg);height:' + over_graffito_width + 'px;width:' + over_graffito_width + 'px; top:' + over_graffito_y + 'px; left:' + over_graffito_x + 'px; z-index:'+graffito_z_index+';><span style="display:block;   text-align:center;">' + d_list.word + '</span></div>';
+                  } else {
+                   text_emoticon = '<div  style="-webkit-transform:rotate('+graffito_rotate +'deg);transform:rotate('+graffito_rotate +'deg);position: absolute;height:' + over_graffito_width + 'px;width:' + over_graffito_width + 'px; top:' + over_graffito_y + 'px; left:' + over_graffito_x + 'px; z-index:'+graffito_z_index+';"><div class="darongqi" style="box-sizing: border-box;width:'+ over_rect_width +'px; height:'+ over_rect_height +'px;  margin-top:' + over_upper_left_y + 'px; margin-left:' + over_upper_left_x + 'px; "><span class="zirongqi" style="display:block; text-align:center;">' + d_list.word + '</span></div></div>';
+                  }
+                  graffito += '<div style="position: absolute;-webkit-transform:rotate('+graffito_rotate +'deg);transform:rotate('+graffito_rotate +'deg);width:'+over_graffito_width+'px; top:'+over_graffito_y+'px; left:'+over_graffito_x+'px; z-index:'+graffito_z_index+';"><div style = "-webkit-transform:scaleX('+rotateYx+');transform:scaleX('+rotateYx+');font-size:10px; color:#000;background:url(' + graffito_picture +'); background-size:'+over_graffito_width+'px ' +over_graffito_width +'px; width:'+over_graffito_width+'px;height:'+over_graffito_width+'px;"  class="font-center"></div></div>'+text_emoticon;
+                }
+               add_graffito += '<div class="swiper-slide">' + graffito +'</div>';
+          }
+          $('.swiper-wrapper').html(add_graffito);
+          $('.pet_album_list_graffito').css('height',$('.pet_album_list_graffito').width());
+          //Swiper轮播初始化设置
+                var swiper = new Swiper('.swiper-container',{
+      loop: loop_switch,
+      autoplay: 3000,
+      autoplayDisableOnInteraction : false,
+      pagination: '.swiper-pagination',
+      paginationClickable: true,
+      paginationBulletRender: function (index, className) {
+          //获取涂鸦用户总数量
+          var user_length = data.data_count;
+          for (var i = 0; i < list.length; i++) {
+              var user_avatar = list[i].avatar;
+              if(user_avatar == ''){ user_avatar = '/static/noneico.png'}
+              switch (index) {
+                case i:
+                user_avatarx=user_avatar;
+                num=i+1;
+                break;
+              }
+          }
+      return '<div class="' + className + '"><img src=' + user_avatarx + '><div><span class="col-ff6e6e">' + num + '</span><span class="col-969696"> / ' + user_length + '</span></div></div>';
+      }
+  })
+      }
+          auto_count();
+     var all_parent = $('.darongqi').height();
+    for(var  i = $('.zirongqi').height(); i < all_parent; i++)
+    {
+        $('.zirongqi').css("font-size", i);
+        if( $('.zirongqi').height() >= all_parent)
+        {
+            for (var j = parseFloat($('.zirongqi').css("font-size")) ; $('.zirongqi').height() > all_parent; j--)
+            {
+                $('.zirongqi').css("font-size", j);
+            }
+            break;
+        }
+    }
+
+    },'json');
+
+
+
+    // 获取评论
+    var commentlist = '';
+    var commentlist_reply = '';
+    $.post('/show/get_comment/'+pet_id+'/',{'csrfmiddlewaretoken': $('[name="csrfmiddlewaretoken"]').val()}, function(data){
+        // 数据异常
+        if(data.code != 200)
+        {
+            console.log(data.msg);
+            return false;
+        }
+        var list = data.data_list;
+        for(var i=0;i<list.length;i++){
+          commentlist_reply = '';
+          {#if(data.data.list[i].reply != ''){#}
+          {#  commentlist_reply += '<a href="javascript:;">@'+data.data.list[i].reply.user.nick+'</a>'+data.data.list[i].content;#}
+          {# }else{#}
+            commentlist_reply += list[i].content;
+          {# }#}
+           commentlist += '<div class="am_tuya_comment"><div class="am_tuya_comment_user"><div class="am_tuya_comment_user_l"><img src="'+list[i].avatar+'" alt="">'+list[i].username+' <span>  •  '+list[i].create_time+'</span></div><div class="am_tuya_comment_user_r">'+list[i].city+'</div><div class="am_tuya_comment_text">'+commentlist_reply+'</div></div></div>';
+        }
+
+
+        $('.am_tuya_comment_list').html(commentlist);
+    },'json');
+
+        // 获取热门涂鸦
+    var petalbumhotlist = '';
+    $.get('/show/get_hot_list/',function(data){
+        // 数据异常
+        if(data.code != 200)
+        {
+            console.log(data.msg);
+            return false;
+        }
+        var list = data.data_list;
+        for(var i=0;i<list.length;i++){
+           petalbumhotlist += '<div class="page_hot_block"><dl><dt><a href="/show/pets/'+list[i].id+'.html" title="'+list[i].username+'的猫猫狗狗"><img src="'+list[i].picture+'" alt="'+list[i].username+'的猫猫狗狗"></a></dt><dd><i>'+list[i].username+'</i><em>'+list[i].city+'</em><div class="hot_block_info"><div class="hot_info_l am-icon-heart">'+list[i].like_num+'</div><div class="hot_info_r am-icon-comments">'+list[i].comment_count+'</div></div></dd></dl></div>';
+        }
+
+
+        $('.page_hot_list').html(petalbumhotlist);
+    },'json');
+
+    // 获取猜你喜欢
+    var petalbumnewslist = '';
+    $.get('/show/get_random_list/',function(data){
+        // 数据异常
+        if(data.code != 200)
+        {
+            console.log(data.msg);
+            return false;
+        }
+        var list = data.data_list;
+        for(var i=0;i<list.length;i++){
+           petalbumnewslist += '<li><div class="am-gallery-item am_list_block"><a href="/show/pets/'+list[i].id+'.html" title="'+list[i].username+'的宠物" class="am_img_bg"><img class="am_img animated" src="'+list[i].picture+'" alt="'+list[i].username+'的宠物"/></a></div><a class="am_imglist_user"><span class="am_imglist_user_ico"><img src="'+list[i].avatar+'" alt=""></span><span class="am_imglist_user_font">宠物主 '+list[i].username+'</span></a></li>';
+        }
+
+
+        $('.cixh_list').html(petalbumnewslist);
+    },'json');
+</script>
+{% endblock %}

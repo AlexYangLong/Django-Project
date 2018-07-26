@@ -54,7 +54,7 @@ class Admin(models.Model):
             'id': self.id,
             'username': self.username,
             'avatar': self.avatar if self.avatar else '',
-            'create_time': self.create_time
+            'create_time': self.create_time.strftime('%Y-%m-%d %X')
         }
 
 
@@ -77,7 +77,7 @@ class User(models.Model):
             'id': self.id,
             'username': self.username,
             'avatar': self.avatar if self.avatar else '',
-            'create_time': self.create_time
+            'create_time': self.create_time.strftime('%Y-%m-%d %X')
         }
 
 
@@ -121,7 +121,7 @@ class Type(models.Model):
         return {
             'id': self.id,
             'name': self.name,
-            'create_time': self.create_time
+            'create_time': self.create_time.strftime('%Y-%m-%d %X')
         }
 
 
@@ -148,7 +148,7 @@ class Article(models.Model):
             'content': self.content,
             'type': self.t.to_dict(),
             'admin': self.admin.to_simple_dict(),
-            'create_time': self.create_time
+            'create_time': self.create_time.strftime('%Y-%m-%d %X')
         }
 
 
@@ -202,7 +202,7 @@ class Baike(models.Model):
             'tags': self.tags,
 
             'admin': self.admin.to_simple_dict(),
-            'create_time': self.create_time
+            'create_time': self.create_time.strftime('%Y-%m-%d %X')
         }
 
 
@@ -226,7 +226,7 @@ class Question(models.Model):
             'subtitle': self.subtitle,
             'user': self.user.to_simple_dict(),
             'answers': [ans.to_dict() for ans in self.answer_set.all()],
-            'create_time': self.create_time
+            'create_time': self.create_time.strftime('%Y-%m-%d %X')
         }
 
 
@@ -248,7 +248,7 @@ class Answer(models.Model):
             'content': self.content,
             'qid': self.question.id,
             'user': self.user.to_simple_dict(),
-            'create_time': self.create_time
+            'create_time': self.create_time.strftime('%Y-%m-%d %X')
         }
 
 
@@ -278,7 +278,7 @@ class Topic(models.Model):
             'views': self.views,
             'upvote': self.upvotetopic_set.all().count(),
             'upvote_users': [user.to_simple_dict() for user in self.upvotetopic_set.all()],
-            'create_time': self.create_time
+            'create_time': self.create_time.strftime('%Y-%m-%d %X')
         }
 
     def to_full_dict(self):
@@ -292,7 +292,7 @@ class Topic(models.Model):
             'views': self.views,
             'upvote': self.upvotetopic_set.all().count(),
             'upvote_users': [user.to_simple_dict() for user in self.upvotetopic_set.all()],
-            'create_time': self.create_time
+            'create_time': self.create_time.strftime('%Y-%m-%d %X')
         }
 
 
@@ -313,7 +313,7 @@ class TopicPic(models.Model):
             'id': self.id,
             'pic': self.pic,
             'tid': self.topic.id,
-            'create_time': self.create_time
+            'create_time': self.create_time.strftime('%Y-%m-%d %X')
         }
 
 
@@ -326,3 +326,119 @@ class UpvoteTopic(models.Model):
 
     class Meta:
         db_table = 'upvote_topic'
+
+
+class Pet(models.Model):
+    username = models.CharField(max_length=20, null=False)
+    avatar = models.CharField(max_length=200, null=True)
+    city = models.CharField(max_length=16, null=True)
+    picture = models.CharField(max_length=200, null=False)
+    like_num = models.IntegerField()
+
+    user = models.ForeignKey(User, null=True)
+
+    # t = models.ForeignKey(Type, null=False)
+    t = models.CharField(max_length=12, null=False)
+
+    v_second = models.CharField(max_length=4, null=True)
+    video = models.CharField(max_length=200, null=True)
+
+    create_time = models.DateTimeField(auto_now_add=True)
+    update_time = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'pet'
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'avatar': self.avatar if self.avatar else '',
+            'city': self.city,
+            'picture': self.picture,
+            'type': self.t,
+            'like_num': self.like_num,
+            'comment_count': self.petcomment_set.all().count(),
+            'create_time': self.create_time.strftime('%Y-%m-%d %X')
+        }
+
+
+class PetDoodle(models.Model):
+    avatar = models.CharField(max_length=200, null=True)
+
+    user = models.ForeignKey(User, null=True)
+    pet = models.ForeignKey(Pet, null=True)
+
+    create_time = models.DateTimeField(auto_now_add=True)
+    update_time = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'pet_doodle'
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'avatar': self.avatar,
+            'doodle_list': [doodle.to_dict() for doodle in self.doodles_set.all()],
+            'create_time': self.create_time.strftime('%Y-%m-%d %X')
+        }
+
+
+class Doodles(models.Model):
+    angle = models.CharField(max_length=12, null=False)
+    center_x = models.CharField(max_length=12, null=False)
+    center_y = models.CharField(max_length=12, null=False)
+    zoom = models.CharField(max_length=12, null=False)
+    picture = models.CharField(max_length=200, null=False)
+    is_turn = models.BooleanField(default=False)
+    rect_upper_left_x = models.CharField(max_length=12, null=False)
+    rect_upper_left_y = models.CharField(max_length=12, null=False)
+    rect_width = models.CharField(max_length=12, null=False)
+    rect_height = models.CharField(max_length=12, null=False)
+    word = models.CharField(max_length=20, null=True)
+
+    pd = models.ForeignKey(PetDoodle, null=False)
+
+    class Meta:
+        db_table = 'doodles'
+
+    def to_dict(self):
+        return {
+            'angle': self.angle,
+            'center_x': self.center_x,
+            'center_y': self.center_y,
+            'zoom': self.zoom,
+            'picture': self.picture,
+            'is_turn': self.is_turn,
+            'rect_upper_left_x': self.rect_upper_left_x,
+            'rect_upper_left_y': self.rect_upper_left_y,
+            'rect_width': self.rect_width,
+            'rect_height': self.rect_height,
+            'word': self.word if self.word else ''
+        }
+
+
+class PetComment(models.Model):
+    username = models.CharField(max_length=20, null=False)
+    avatar = models.CharField(max_length=200, null=False)
+    content = models.CharField(max_length=256, null=False)
+    city = models.CharField(max_length=16, null=False)
+
+    pet = models.ForeignKey(Pet, null=False)
+    user = models.ForeignKey(User, null=True)
+
+    create_time = models.DateTimeField(auto_now_add=True)
+    update_time = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'pet_comment'
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'avatar': self.avatar,
+            'content': self.content,
+            'city': self.city,
+            'create_time': self.create_time.strftime('%Y-%m-%d %X')
+        }

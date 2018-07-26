@@ -16,3 +16,5 @@ BAIKE_NOT_EXISTS = {'code': 1201, 'msg': '该百科知识不存在'}
 QUESTION_NOT_EXISTS = {'code': 1301, 'msg': '该问答不存在'}
 
 TOPIC_NOT_EXISTS = {'code': 1401, 'msg': '该话题不存在'}
+
+PET_NOT_EXISTS = {'code': 1501, 'msg': '该宠物信息不存在'}

@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}宠物秀 搞笑宠物哈士奇与拉布拉多,还有傻白甜的萨摩耶,超激萌布偶猫等{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+<div class="get">
+    <div class="am-g">
+        <div class="am-u-lg-12">
+            <div class="get-title">
+                <div class="get_font_left"><img src="http://assets.petshow.cc/pc/v2/img/font_yjy.png" alt="宠物秀iOS版"></div>
+                <div class="get_font_center" id="banner_num"></div>
+                <div class="get_font_rigth"><img src="http://assets.petshow.cc/pc/v2/img/font_zty.png" alt="宠物秀安卓版"></div>
+            </div>
+
+            <div class="font_line"><img src="http://assets.petshow.cc/pc/v2/img/font_line.png" alt="宠物秀"></div>
+            <p>
+<a rel="external nofollow" href="https://itunes.apple.com/us/app/chong-wu-xiu/id976605844?l=zh&ls=1&mt=8" class="am-btn am-btn-sm get-btn  am-radius banner_ios am-icon-apple"> App store</a> 
+<a rel="external nofollow" href="http://sj.qq.com/myapp/detail.htm?apkName=com.staffy.pet" class="am-btn am-btn-sm  am-radius get-btn banner_android am-icon-android"> Android</a>
+            </p>
+        </div>
+    </div>
+</div>
+<div class="banner_navbg">
+    <div class="am-g">
+        <div class="banner_nav"><span class="am-icon-caret-right">  筛选：</span>
+            <a href="{% url 'show:pets' %}?pn=1&t=tpty" target="_self"  class="click_tpty">图片涂鸦</a>
+            <a href="{% url 'show:pets' %}?pn=1&t=yyty" target="_self"  class="click_yyty">语音涂鸦</a>
+            <a href="{% url 'show:pets' %}?pn=1&t=rqzg" target="_self"  class="click_rqzg">人气最高</a>
+            <a href="{% url 'show:pets' %}?pn=1&t=zxmc" target="_self"  class="click_zxmc">最新萌宠</a>
+        </div>
+    </div>
+</div>
+
+<div class="am-g am-imglist">
+    <ul data-am-widget="gallery" class="am-gallery am-avg-sm-2
+  am-avg-md-3 am-avg-lg-6 am-gallery-default am_index_addimglist">
+    </ul>
+        <div class="am_news_load am_news_load_index"><span><i class="am-icon-spinner am-icon-spin"></i>更多宠物秀猫猫狗狗萌宠照片</span></div>
+        <br>
+
+</div>
+{% endblock %}
+
+{% block JS %}
+<script src="/static/js/countUp.min.js"></script>
+<script src="/static/js/amazeui.lazyload.min.js"></script>
+<script>
+var url = window.location.search;
+var page = 1;
+if(url != "" && url != undefined) {
+    var type = url.split('&')[1].split('=')[1];
+    if(type == "tpty"){
+        $('.click_tpty').addClass('banner_hover');
+    }else if(type == "yyty"){
+        $('.click_yyty').addClass('banner_hover');
+    }else if(type == "rqzg"){
+        $('.click_rqzg').addClass('banner_hover');
+    }else if(type == "zxmc"){
+        $('.click_zxmc').addClass('banner_hover');
+    }
+}else {
+    type="";
+    $('.click_tpty').addClass('banner_hover');
+}
+$(function(){
+    load_more();
+   var options = {
+      useEasing : true,
+      useGrouping : true,
+      separator : '',
+      decimal : '.',
+      prefix : '',
+      suffix : ''
+    };
+    var banner_num = new CountUp("banner_num", 560200-500, 560200, 0, 5, options);
+    banner_num.start();
+});
+function load_more()
+{
+    var indexListImgHtml = '';
+    $('.am_news_load_index').unbind('click');
+    $.post('/show/pets/?pn=' + page + '&t=' + type,{'csrfmiddlewaretoken': $('[name="csrfmiddlewaretoken"]').val()},function(data){
+
+        $('.am-icon-spinner').hide();
+        // 数据异常
+        if(data.code != 200)
+        {
+            console.log(data.msg);
+            return false;
+        }
+        var list = data.data_list;
+        for( var i = 0 ; i < list.length ; i++ ){
+            indexListImgHtml += '<li><div class="am-gallery-item am_list_block"><a href="/show/pets/'+list[i].id+'.html" class="am_img_bg"><img class="am_img animated" src="/static/loading.gif" data-original="'+list[i].picture+'" alt="'+list[i].username+'的宠物"/></a><div class="am_listimg_info"><span class="am-icon-heart">'+list[i].like_num+'</span><span class="am-icon-comments">'+list[i].comment_count+'</span><span class="am_imglist_time">'+list[i].create_time+'</span></div></div><a class="am_imglist_user"><span class="am_imglist_user_ico"><img src="'+list[i].avatar+'" alt="'+list[i].username+'"></span><span class="am_imglist_user_font">宠物主 '+list[i].username+'</span></a></li>';
+         }
+        $('.am_index_addimglist').append(indexListImgHtml);
+        // 懒加载
+        $("img.am_img").lazyload();
+        $("a.am_img_bg").lazyload({
+            effect : 'fadeIn'
+        });
+         // 点击加载更多
+        $('.am_news_load_index').on('click',function(){
+            $('.am-icon-spinner').show();
+            if(data.has_next){
+                load_more(page);
+            }else {
+                $('.am_news_load_index').unbind('click');
+                $('.am-icon-spinner').hide();
+                $('.am_news_load_index span').text('已经到底啦~~');
+            }
+        });
+        page++;
+    },'json');
+
+}
+
+</script>
+{% endblock %}
