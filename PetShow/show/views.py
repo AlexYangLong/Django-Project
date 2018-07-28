@@ -129,7 +129,7 @@ def get_comment(request, pid='0'):
 def get_hot_list(request):
     if request.method == 'GET':
         try:
-            pets = Pet.objects.order_by('like_num').all()
+            pets = Pet.objects.order_by('-like_num').all()[:10]
             res = status_code.SUCCESS
             res['data_list'] = [pet.to_dict() for pet in pets]
             return JsonResponse(res)
@@ -143,7 +143,7 @@ def get_random_list(request):
         try:
             pets = Pet.objects.all()
             count = pets.count()
-            if count > 5:
+            if count > 8:
                 pets = random.sample(list(pets), k=8)
             else:
                 pets = pets

@@ -329,9 +329,9 @@ class UpvoteTopic(models.Model):
 
 
 class Pet(models.Model):
-    username = models.CharField(max_length=20, null=False)
+    username = models.CharField(max_length=20, null=True)
     avatar = models.CharField(max_length=200, null=True)
-    city = models.CharField(max_length=16, null=True)
+    city = models.CharField(max_length=64, null=True)
     picture = models.CharField(max_length=200, null=False)
     like_num = models.IntegerField()
 
@@ -378,24 +378,24 @@ class PetDoodle(models.Model):
     def to_dict(self):
         return {
             'id': self.id,
-            'avatar': self.avatar,
+            'avatar': self.avatar if self.avatar else '',
             'doodle_list': [doodle.to_dict() for doodle in self.doodles_set.all()],
             'create_time': self.create_time.strftime('%Y-%m-%d %X')
         }
 
 
 class Doodles(models.Model):
-    angle = models.CharField(max_length=12, null=False)
-    center_x = models.CharField(max_length=12, null=False)
-    center_y = models.CharField(max_length=12, null=False)
-    zoom = models.CharField(max_length=12, null=False)
-    picture = models.CharField(max_length=200, null=False)
+    angle = models.CharField(max_length=12, null=True)
+    center_x = models.CharField(max_length=12, null=True)
+    center_y = models.CharField(max_length=12, null=True)
+    zoom = models.CharField(max_length=12, null=True)
+    picture = models.CharField(max_length=200, null=True)
     is_turn = models.BooleanField(default=False)
-    rect_upper_left_x = models.CharField(max_length=12, null=False)
-    rect_upper_left_y = models.CharField(max_length=12, null=False)
-    rect_width = models.CharField(max_length=12, null=False)
-    rect_height = models.CharField(max_length=12, null=False)
-    word = models.CharField(max_length=20, null=True)
+    rect_upper_left_x = models.CharField(max_length=12, null=True)
+    rect_upper_left_y = models.CharField(max_length=12, null=True)
+    rect_width = models.CharField(max_length=12, null=True)
+    rect_height = models.CharField(max_length=12, null=True)
+    word = models.CharField(max_length=256, null=True)
 
     pd = models.ForeignKey(PetDoodle, null=False)
 
@@ -419,10 +419,10 @@ class Doodles(models.Model):
 
 
 class PetComment(models.Model):
-    username = models.CharField(max_length=20, null=False)
-    avatar = models.CharField(max_length=200, null=False)
+    username = models.CharField(max_length=20, null=True)
+    avatar = models.CharField(max_length=200, null=True)
     content = models.CharField(max_length=256, null=False)
-    city = models.CharField(max_length=16, null=False)
+    city = models.CharField(max_length=64, null=True)
 
     pet = models.ForeignKey(Pet, null=False)
     user = models.ForeignKey(User, null=True)
